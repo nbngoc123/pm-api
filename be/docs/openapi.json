@@ -1,0 +1,9457 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "PM-KPI System",
+  "description": "Backend Quản lý dự án & KPI. Lỗi trả về dạng {error:{code,message,details}}.",
+  "version": "1.0.0"
+ },
+ "paths": {
+  "/api/v1/auth/login": {
+   "post": {
+    "tags": [
+     "Auth"
+    ],
+    "summary": "Login",
+    "operationId": "login_api_v1_auth_login_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LoginIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TokenOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/auth/refresh": {
+   "post": {
+    "tags": [
+     "Auth"
+    ],
+    "summary": "Refresh",
+    "operationId": "refresh_api_v1_auth_refresh_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RefreshIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TokenOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/auth/me": {
+   "get": {
+    "tags": [
+     "Auth"
+    ],
+    "summary": "Me",
+    "operationId": "me_api_v1_auth_me_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MeOut"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/auth/change-password": {
+   "post": {
+    "tags": [
+     "Auth"
+    ],
+    "summary": "Change Password",
+    "operationId": "change_password_api_v1_auth_change_password_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ChangePwdIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/users": {
+   "post": {
+    "tags": [
+     "Users & Roles"
+    ],
+    "summary": "Create User",
+    "operationId": "create_user_api_v1_users_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UserCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UserOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "tags": [
+     "Users & Roles"
+    ],
+    "summary": "List Users",
+    "operationId": "list_users_api_v1_users_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "q",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Q"
+      }
+     },
+     {
+      "name": "trang_thai",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Trang Thai"
+      }
+     },
+     {
+      "name": "vai_tro",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Vai Tro"
+      }
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 1,
+       "default": 1,
+       "title": "Page"
+      }
+     },
+     {
+      "name": "size",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 100,
+       "minimum": 1,
+       "default": 20,
+       "title": "Size"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Page_UserOut_"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/users/lookup": {
+   "get": {
+    "tags": [
+     "Users & Roles"
+    ],
+    "summary": "Lookup Users",
+    "description": "Tìm người dùng ACTIVE để thêm vào dự án (mọi user đăng nhập đều dùng được, chỉ trả thông tin tối thiểu).",
+    "operationId": "lookup_users_api_v1_users_lookup_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "q",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "minLength": 2,
+       "title": "Q"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/UserLookup"
+         },
+         "title": "Response Lookup Users Api V1 Users Lookup Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/users/{ma_nd}": {
+   "get": {
+    "tags": [
+     "Users & Roles"
+    ],
+    "summary": "Get User",
+    "operationId": "get_user_api_v1_users__ma_nd__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_nd",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Nd"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UserOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "Users & Roles"
+    ],
+    "summary": "Update User",
+    "operationId": "update_user_api_v1_users__ma_nd__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_nd",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Nd"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UserUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UserOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/users/{ma_nd}/reset-password": {
+   "post": {
+    "tags": [
+     "Users & Roles"
+    ],
+    "summary": "Reset Password",
+    "operationId": "reset_password_api_v1_users__ma_nd__reset_password_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_nd",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Nd"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ResetPwdIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/roles": {
+   "get": {
+    "tags": [
+     "Users & Roles"
+    ],
+    "summary": "List Roles",
+    "operationId": "list_roles_api_v1_roles_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/RoleOut"
+         },
+         "type": "array",
+         "title": "Response List Roles Api V1 Roles Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/projects": {
+   "post": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "1.1 Tạo dự án (Lệnh khởi tạo DA)",
+    "operationId": "create_project_api_v1_projects_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ProjectCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ProjectOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "Danh sách dự án của tôi (hoặc tất cả nếu có project.read_all)",
+    "operationId": "list_projects_api_v1_projects_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "q",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Q"
+      }
+     },
+     {
+      "name": "trang_thai",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/TrangThaiDuAn"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Trang Thai"
+      }
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 1,
+       "default": 1,
+       "title": "Page"
+      }
+     },
+     {
+      "name": "size",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 100,
+       "minimum": 1,
+       "default": 20,
+       "title": "Size"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Page_ProjectOut_"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}": {
+   "get": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "Get Project",
+    "operationId": "get_project_api_v1_projects__ma_da__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ProjectOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "1.2 Cập nhật thông tin dự án",
+    "operationId": "update_info_api_v1_projects__ma_da__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ProjectInfoUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ProjectOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/goals": {
+   "put": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "1.3 Thiết lập mục tiêu & thời gian dự án",
+    "operationId": "update_goals_api_v1_projects__ma_da__goals_put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ProjectGoalsUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ProjectOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/status": {
+   "patch": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "1.5 Cập nhật trạng thái dự án",
+    "operationId": "change_status_api_v1_projects__ma_da__status_patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/StatusIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ProjectOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/close": {
+   "post": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "1.6 Đóng dự án (Yêu cầu đóng DA từ Ban giám đốc)",
+    "operationId": "close_project_api_v1_projects__ma_da__close_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "anyOf": [
+         {
+          "$ref": "#/components/schemas/CloseIn"
+         },
+         {
+          "type": "null"
+         }
+        ],
+        "title": "Body"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ProjectOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/my-permissions": {
+   "get": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "Quyền của tôi trong dự án (để ẩn/hiện nút trên UI)",
+    "operationId": "my_permissions_api_v1_projects__ma_da__my_permissions_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/overview": {
+   "get": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "1.5 Báo cáo trạng thái tổng quan",
+    "operationId": "overview_api_v1_projects__ma_da__overview_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/members": {
+   "get": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "List Members",
+    "operationId": "list_members_api_v1_projects__ma_da__members_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "include_left",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "default": false,
+       "title": "Include Left"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/MemberOut"
+         },
+         "title": "Response List Members Api V1 Projects  Ma Da  Members Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "1.4 Thêm thành viên & phân quyền",
+    "operationId": "add_member_api_v1_projects__ma_da__members_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/MemberAdd"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MemberOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/members/{ma_nd}": {
+   "patch": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "1.4 Đổi vai trò thành viên",
+    "operationId": "change_role_api_v1_projects__ma_da__members__ma_nd__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "ma_nd",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Nd"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/MemberRoleUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MemberOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "1.4 Xóa thành viên khỏi dự án",
+    "operationId": "remove_member_api_v1_projects__ma_da__members__ma_nd__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "ma_nd",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Nd"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/milestones": {
+   "get": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "List Milestones",
+    "operationId": "list_milestones_api_v1_projects__ma_da__milestones_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/MilestoneOut"
+         },
+         "title": "Response List Milestones Api V1 Projects  Ma Da  Milestones Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "1.5 Thiết lập mốc",
+    "operationId": "create_milestone_api_v1_projects__ma_da__milestones_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/MilestoneIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MilestoneOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/milestones/{ma_moc}": {
+   "patch": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "Update Milestone",
+    "operationId": "update_milestone_api_v1_projects__ma_da__milestones__ma_moc__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "ma_moc",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Moc"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/MilestoneUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/MilestoneOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "1. Quản lý dự án"
+    ],
+    "summary": "Delete Milestone",
+    "operationId": "delete_milestone_api_v1_projects__ma_da__milestones__ma_moc__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "ma_moc",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Moc"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/epics": {
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "List Epics",
+    "operationId": "list_epics_api_v1_projects__ma_da__epics_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/EpicOut"
+         },
+         "title": "Response List Epics Api V1 Projects  Ma Da  Epics Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Create Epic",
+    "operationId": "create_epic_api_v1_projects__ma_da__epics_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/EpicIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EpicOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/epics/{ma_epic}": {
+   "delete": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Delete Epic",
+    "operationId": "delete_epic_api_v1_projects__ma_da__epics__ma_epic__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "ma_epic",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Epic"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/tasks": {
+   "post": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "2.1 Tạo công việc",
+    "operationId": "create_task_api_v1_projects__ma_da__tasks_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TaskCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TaskOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "List Tasks",
+    "operationId": "list_tasks_api_v1_projects__ma_da__tasks_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "trang_thai",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/TrangThaiTask"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Trang Thai"
+      }
+     },
+     {
+      "name": "uu_tien",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/UuTien"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Uu Tien"
+      }
+     },
+     {
+      "name": "ma_nd",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "lọc theo người được giao",
+       "title": "Ma Nd"
+      },
+      "description": "lọc theo người được giao"
+     },
+     {
+      "name": "ma_moc",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Ma Moc"
+      }
+     },
+     {
+      "name": "ma_epic",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Ma Epic"
+      }
+     },
+     {
+      "name": "q",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Q"
+      }
+     },
+     {
+      "name": "tre_han",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Tre Han"
+      }
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 1,
+       "default": 1,
+       "title": "Page"
+      }
+     },
+     {
+      "name": "size",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 100,
+       "minimum": 1,
+       "default": 20,
+       "title": "Size"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Page_TaskOut_"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/tasks/prioritized": {
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "2.4 Danh sách ưu tiên & thời hạn",
+    "operationId": "prioritized_api_v1_projects__ma_da__tasks_prioritized_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/TaskOut"
+         },
+         "title": "Response Prioritized Api V1 Projects  Ma Da  Tasks Prioritized Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/reviews/pending": {
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "2.6 Danh sách task cần duyệt",
+    "operationId": "pending_reviews_api_v1_projects__ma_da__reviews_pending_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/TaskOut"
+         },
+         "title": "Response Pending Reviews Api V1 Projects  Ma Da  Reviews Pending Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks/{ma_cv}": {
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Get Task",
+    "operationId": "get_task_api_v1_tasks__ma_cv__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TaskOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "2.2/2.4 Cập nhật công việc, ưu tiên, thời hạn",
+    "operationId": "update_task_api_v1_tasks__ma_cv__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TaskUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TaskOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Delete Task",
+    "operationId": "delete_task_api_v1_tasks__ma_cv__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks/{ma_cv}/transition": {
+   "post": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "2.5 Theo dõi trạng thái công việc",
+    "operationId": "transition_api_v1_tasks__ma_cv__transition_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TransitionIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TaskOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks/{ma_cv}/progress": {
+   "post": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "2.5 Cập nhật % hoàn thành",
+    "operationId": "progress_api_v1_tasks__ma_cv__progress_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ProgressIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TaskOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks/{ma_cv}/assignments": {
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "List Assignments",
+    "operationId": "list_assignments_api_v1_tasks__ma_cv__assignments_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/AssignOut"
+         },
+         "title": "Response List Assignments Api V1 Tasks  Ma Cv  Assignments Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "2.3 Phân công công việc",
+    "operationId": "assign_api_v1_tasks__ma_cv__assignments_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AssignIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AssignResult"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks/{ma_cv}/assignments/{ma_nd}": {
+   "delete": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Unassign",
+    "operationId": "unassign_api_v1_tasks__ma_cv__assignments__ma_nd__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     },
+     {
+      "name": "ma_nd",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Nd"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks/{ma_cv}/review": {
+   "post": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "2.6 Xét duyệt công việc",
+    "operationId": "review_api_v1_tasks__ma_cv__review_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ReviewIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ReviewOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks/{ma_cv}/reviews": {
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "List Reviews",
+    "operationId": "list_reviews_api_v1_tasks__ma_cv__reviews_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/ReviewOut"
+         },
+         "title": "Response List Reviews Api V1 Tasks  Ma Cv  Reviews Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks/{ma_cv}/subtasks": {
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "List Subtasks",
+    "operationId": "list_subtasks_api_v1_tasks__ma_cv__subtasks_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/SubTaskOut"
+         },
+         "title": "Response List Subtasks Api V1 Tasks  Ma Cv  Subtasks Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Create Subtask",
+    "operationId": "create_subtask_api_v1_tasks__ma_cv__subtasks_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SubTaskIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubTaskOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks/{ma_cv}/subtasks/{ma_sub}": {
+   "patch": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Update Subtask",
+    "operationId": "update_subtask_api_v1_tasks__ma_cv__subtasks__ma_sub__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     },
+     {
+      "name": "ma_sub",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Sub"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SubTaskUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SubTaskOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Delete Subtask",
+    "operationId": "delete_subtask_api_v1_tasks__ma_cv__subtasks__ma_sub__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     },
+     {
+      "name": "ma_sub",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Sub"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks/{ma_cv}/attachments": {
+   "post": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "2.5 Đính kèm tệp",
+    "operationId": "upload_api_v1_tasks__ma_cv__attachments_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/Body_upload_api_v1_tasks__ma_cv__attachments_post"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AttachmentOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "List Attachments",
+    "operationId": "list_attachments_api_v1_tasks__ma_cv__attachments_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/AttachmentOut"
+         },
+         "title": "Response List Attachments Api V1 Tasks  Ma Cv  Attachments Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/attachments/{ma_tep}/download": {
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Download",
+    "operationId": "download_api_v1_attachments__ma_tep__download_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_tep",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Tep"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/attachments/{ma_tep}": {
+   "delete": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Delete Attachment",
+    "operationId": "delete_attachment_api_v1_attachments__ma_tep__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_tep",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Tep"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks/{ma_cv}/timesheets": {
+   "post": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "2.7 Ghi nhận thời gian làm việc",
+    "operationId": "log_time_api_v1_tasks__ma_cv__timesheets_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TimesheetIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TimesheetOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Task Timesheets",
+    "operationId": "task_timesheets_api_v1_tasks__ma_cv__timesheets_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/TimesheetOut"
+         },
+         "title": "Response Task Timesheets Api V1 Tasks  Ma Cv  Timesheets Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/me/timesheets": {
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "My Timesheets",
+    "operationId": "my_timesheets_api_v1_me_timesheets_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "tu_ngay",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Tu Ngay"
+      }
+     },
+     {
+      "name": "den_ngay",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Den Ngay"
+      }
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 1,
+       "default": 1,
+       "title": "Page"
+      }
+     },
+     {
+      "name": "size",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "minimum": 1,
+       "default": 50,
+       "title": "Size"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Page_TimesheetOut_"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/me/timesheets/summary": {
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Tổng giờ làm tích lũy",
+    "operationId": "my_summary_api_v1_me_timesheets_summary_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "tu_ngay",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Tu Ngay"
+      }
+     },
+     {
+      "name": "den_ngay",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Den Ngay"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/timesheets": {
+   "get": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Project Timesheets",
+    "operationId": "project_timesheets_api_v1_projects__ma_da__timesheets_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "ma_nd",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Ma Nd"
+      }
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 1,
+       "default": 1,
+       "title": "Page"
+      }
+     },
+     {
+      "name": "size",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "minimum": 1,
+       "default": 50,
+       "title": "Size"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Page_TimesheetOut_"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/timesheets/{ma_nk}": {
+   "patch": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Edit Timesheet",
+    "operationId": "edit_timesheet_api_v1_timesheets__ma_nk__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_nk",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Nk"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TimesheetUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TimesheetOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "2. Quản lý công việc"
+    ],
+    "summary": "Delete Timesheet",
+    "operationId": "delete_timesheet_api_v1_timesheets__ma_nk__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_nk",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Nk"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/progress/evm": {
+   "get": {
+    "tags": [
+     "3. Theo dõi tiến độ"
+    ],
+    "summary": "3.1 Chỉ số EVM (PV/EV/AC/SPI/CPI/EAC)",
+    "operationId": "evm_api_v1_projects__ma_da__progress_evm_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "as_of",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "As Of"
+      }
+     },
+     {
+      "name": "co_so",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(chi_phi|gio)$",
+       "default": "chi_phi",
+       "title": "Co So"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/progress/burndown": {
+   "get": {
+    "tags": [
+     "3. Theo dõi tiến độ"
+    ],
+    "summary": "3.1 Biểu đồ Burn-down",
+    "operationId": "burndown_api_v1_projects__ma_da__progress_burndown_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "as_of",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "As Of"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/tasks/{ma_cv}/baseline": {
+   "put": {
+    "tags": [
+     "3. Theo dõi tiến độ"
+    ],
+    "summary": "Thiết lập kế hoạch gốc của task",
+    "operationId": "set_baseline_api_v1_tasks__ma_cv__baseline_put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_cv",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Cv"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/BaselineIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BaselineOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/baseline": {
+   "get": {
+    "tags": [
+     "3. Theo dõi tiến độ"
+    ],
+    "summary": "List Baseline",
+    "operationId": "list_baseline_api_v1_projects__ma_da__baseline_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/BaselineOut"
+         },
+         "title": "Response List Baseline Api V1 Projects  Ma Da  Baseline Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/baseline/lock": {
+   "post": {
+    "tags": [
+     "3. Theo dõi tiến độ"
+    ],
+    "summary": "Khóa kế hoạch gốc (tự tạo baseline cho task chưa có)",
+    "operationId": "lock_api_v1_projects__ma_da__baseline_lock_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/progress/snapshots": {
+   "post": {
+    "tags": [
+     "3. Theo dõi tiến độ"
+    ],
+    "summary": "3.3 Lưu bản ghi chỉ số DA",
+    "operationId": "snapshot_api_v1_projects__ma_da__progress_snapshots_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "as_of",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "As Of"
+      }
+     }
+    ],
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SnapshotOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "tags": [
+     "3. Theo dõi tiến độ"
+    ],
+    "summary": "Snapshots",
+    "operationId": "snapshots_api_v1_projects__ma_da__progress_snapshots_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/SnapshotOut"
+         },
+         "title": "Response Snapshots Api V1 Projects  Ma Da  Progress Snapshots Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/alerts/scan": {
+   "post": {
+    "tags": [
+     "3. Theo dõi tiến độ"
+    ],
+    "summary": "3.2 Quét & sinh cảnh báo (cron gọi hằng ngày)",
+    "operationId": "scan_api_v1_alerts_scan_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "as_of",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "As Of"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/me/notifications": {
+   "get": {
+    "tags": [
+     "3. Theo dõi tiến độ"
+    ],
+    "summary": "My Notifications",
+    "operationId": "my_notifications_api_v1_me_notifications_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "chua_doc",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "default": false,
+       "title": "Chua Doc"
+      }
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 1,
+       "default": 1,
+       "title": "Page"
+      }
+     },
+     {
+      "name": "size",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 100,
+       "minimum": 1,
+       "default": 20,
+       "title": "Size"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Page_NotificationOut_"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/notifications/{ma_tb}/read": {
+   "post": {
+    "tags": [
+     "3. Theo dõi tiến độ"
+    ],
+    "summary": "Mark Read",
+    "operationId": "mark_read_api_v1_notifications__ma_tb__read_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_tb",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Tb"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/me/notifications/read-all": {
+   "post": {
+    "tags": [
+     "3. Theo dõi tiến độ"
+    ],
+    "summary": "Read All",
+    "operationId": "read_all_api_v1_me_notifications_read_all_post",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/audit-logs": {
+   "get": {
+    "tags": [
+     "3. Theo dõi tiến độ"
+    ],
+    "summary": "3.3 Nhật ký truy vết thay đổi",
+    "operationId": "audit_logs_api_v1_audit_logs_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "loai_su_kien",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Loai Su Kien"
+      }
+     },
+     {
+      "name": "doi_tuong",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Doi Tuong"
+      }
+     },
+     {
+      "name": "ma_doi_tuong",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Ma Doi Tuong"
+      }
+     },
+     {
+      "name": "ma_nguoi_thuc_hien",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Ma Nguoi Thuc Hien"
+      }
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 1,
+       "default": 1,
+       "title": "Page"
+      }
+     },
+     {
+      "name": "size",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "minimum": 1,
+       "default": 50,
+       "title": "Size"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Page_AuditOut_"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/violation-rules": {
+   "get": {
+    "tags": [
+     "5. Vi phạm & chất lượng"
+    ],
+    "summary": "List Rules",
+    "operationId": "list_rules_api_v1_violation_rules_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/RuleOut"
+         },
+         "type": "array",
+         "title": "Response List Rules Api V1 Violation Rules Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "post": {
+    "tags": [
+     "5. Vi phạm & chất lượng"
+    ],
+    "summary": "Create Rule",
+    "operationId": "create_rule_api_v1_violation_rules_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RuleIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RuleOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/violation-rules/{ma_qd}": {
+   "patch": {
+    "tags": [
+     "5. Vi phạm & chất lượng"
+    ],
+    "summary": "Update Rule",
+    "operationId": "update_rule_api_v1_violation_rules__ma_qd__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_qd",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Qd"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RuleUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RuleOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "5. Vi phạm & chất lượng"
+    ],
+    "summary": "Delete Rule",
+    "operationId": "delete_rule_api_v1_violation_rules__ma_qd__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_qd",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Qd"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/violations": {
+   "post": {
+    "tags": [
+     "5. Vi phạm & chất lượng"
+    ],
+    "summary": "5.1 Ghi nhận & phân loại vi phạm (hồ sơ dự thảo)",
+    "operationId": "create_violation_api_v1_violations_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ViolationIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ViolationOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "tags": [
+     "5. Vi phạm & chất lượng"
+    ],
+    "summary": "List Violations",
+    "operationId": "list_violations_api_v1_violations_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "ma_nd",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Ma Nd"
+      }
+     },
+     {
+      "name": "trang_thai",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/TrangThaiViPham"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Trang Thai"
+      }
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 1,
+       "default": 1,
+       "title": "Page"
+      }
+     },
+     {
+      "name": "size",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 100,
+       "minimum": 1,
+       "default": 20,
+       "title": "Size"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Page_ViolationOut_"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/me/violations/pending": {
+   "get": {
+    "tags": [
+     "5. Vi phạm & chất lượng"
+    ],
+    "summary": "5.1 Danh sách chờ giải trình của tôi",
+    "operationId": "my_pending_api_v1_me_violations_pending_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ViolationOut"
+         },
+         "type": "array",
+         "title": "Response My Pending Api V1 Me Violations Pending Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/violations/{ma_vp}": {
+   "get": {
+    "tags": [
+     "5. Vi phạm & chất lượng"
+    ],
+    "summary": "Get Violation",
+    "operationId": "get_violation_api_v1_violations__ma_vp__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_vp",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Vp"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ViolationOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/violations/{ma_vp}/notify": {
+   "post": {
+    "tags": [
+     "5. Vi phạm & chất lượng"
+    ],
+    "summary": "5.1 Gửi thông báo & yêu cầu giải trình",
+    "operationId": "notify_violator_api_v1_violations__ma_vp__notify_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_vp",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Vp"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ViolationOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/violations/{ma_vp}/explanations": {
+   "post": {
+    "tags": [
+     "5. Vi phạm & chất lượng"
+    ],
+    "summary": "5.2 Nộp đơn giải trình & bằng chứng",
+    "operationId": "explain_api_v1_violations__ma_vp__explanations_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_vp",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Vp"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ExplainIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ExplanationOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/violations/{ma_vp}/conclude": {
+   "post": {
+    "tags": [
+     "5. Vi phạm & chất lượng"
+    ],
+    "summary": "5.2 Kết luận xử lý vi phạm (Biên bản lỗi, Lệnh xử phạt)",
+    "operationId": "conclude_api_v1_violations__ma_vp__conclude_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_vp",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Vp"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ConcludeIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ViolationOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kpi/criteria": {
+   "get": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "List Criteria",
+    "operationId": "list_criteria_api_v1_kpi_criteria_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/CriterionOut"
+         },
+         "type": "array",
+         "title": "Response List Criteria Api V1 Kpi Criteria Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   },
+   "post": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "4.1 Tạo tiêu chí KPI",
+    "operationId": "create_criterion_api_v1_kpi_criteria_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CriterionIn"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CriterionOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/kpi/criteria/{ma_tc}": {
+   "patch": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "Update Criterion",
+    "operationId": "update_criterion_api_v1_kpi_criteria__ma_tc__patch",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_tc",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Tc"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CriterionUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CriterionOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "Delete Criterion",
+    "operationId": "delete_criterion_api_v1_kpi_criteria__ma_tc__delete",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_tc",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Tc"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Msg"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/projects/{ma_da}/kpi/periods": {
+   "get": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "List Periods",
+    "operationId": "list_periods_api_v1_projects__ma_da__kpi_periods_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/PeriodOut"
+         },
+         "title": "Response List Periods Api V1 Projects  Ma Da  Kpi Periods Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "4.1 Tạo kỳ KPI",
+    "operationId": "create_period_api_v1_projects__ma_da__kpi_periods_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PeriodIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PeriodOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kpi/periods/{ma_ky}": {
+   "get": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "Get Period",
+    "operationId": "get_period_api_v1_kpi_periods__ma_ky__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_ky",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Ky"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PeriodOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kpi/periods/{ma_ky}/config": {
+   "put": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "4.1 Cấu hình & phân bổ KPI (tiêu chí, trọng số, chỉ tiêu)",
+    "operationId": "set_config_api_v1_kpi_periods__ma_ky__config_put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_ky",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Ky"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ConfigIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ConfigOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "Get Config",
+    "operationId": "get_config_api_v1_kpi_periods__ma_ky__config_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_ky",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Ky"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ConfigOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kpi/periods/{ma_ky}/open": {
+   "post": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "Mở kỳ: tạo bảng đánh giá cho thành viên",
+    "operationId": "open_period_api_v1_kpi_periods__ma_ky__open_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_ky",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Ky"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kpi/periods/{ma_ky}/sync-members": {
+   "post": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "Bổ sung đánh giá cho thành viên mới",
+    "operationId": "sync_api_v1_kpi_periods__ma_ky__sync_members_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_ky",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Ky"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kpi/periods/{ma_ky}/manual-inputs": {
+   "put": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "4.2 Nhập hiệu suất thô (tiêu chí MANUAL) – Quản lý",
+    "operationId": "manual_api_v1_kpi_periods__ma_ky__manual_inputs_put",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_ky",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Ky"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ManualIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kpi/periods/{ma_ky}/calculate": {
+   "post": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "4.2 Thu thập & tính toán tự động → bảng điểm tạm tính",
+    "operationId": "calculate_api_v1_kpi_periods__ma_ky__calculate_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_ky",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Ky"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kpi/periods/{ma_ky}/close": {
+   "post": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "Đóng kỳ KPI",
+    "operationId": "close_period_api_v1_kpi_periods__ma_ky__close_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_ky",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Ky"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PeriodOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kpi/periods/{ma_ky}/evaluations": {
+   "get": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "List Evaluations",
+    "operationId": "list_evaluations_api_v1_kpi_periods__ma_ky__evaluations_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_ky",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Ky"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/EvaluationOut"
+         },
+         "title": "Response List Evaluations Api V1 Kpi Periods  Ma Ky  Evaluations Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kpi/periods/{ma_ky}/evaluations/{ma_nd}": {
+   "get": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "Get Eval",
+    "operationId": "get_eval_api_v1_kpi_periods__ma_ky__evaluations__ma_nd__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_ky",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Ky"
+      }
+     },
+     {
+      "name": "ma_nd",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Nd"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EvaluationOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kpi/periods/{ma_ky}/evaluations/{ma_nd}/confirm": {
+   "post": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "4.3 Thành viên xác nhận kết quả",
+    "operationId": "confirm_api_v1_kpi_periods__ma_ky__evaluations__ma_nd__confirm_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_ky",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Ky"
+      }
+     },
+     {
+      "name": "ma_nd",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Nd"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EvaluationOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kpi/periods/{ma_ky}/evaluations/{ma_nd}/approve": {
+   "post": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "4.3 Quản lý phê duyệt KPI",
+    "operationId": "approve_api_v1_kpi_periods__ma_ky__evaluations__ma_nd__approve_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_ky",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Ky"
+      }
+     },
+     {
+      "name": "ma_nd",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Nd"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "anyOf": [
+         {
+          "$ref": "#/components/schemas/DecisionIn"
+         },
+         {
+          "type": "null"
+         }
+        ],
+        "title": "Body"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EvaluationOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/kpi/periods/{ma_ky}/evaluations/{ma_nd}/reject": {
+   "post": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "4.3 Quản lý từ chối (yêu cầu tính lại)",
+    "operationId": "reject_api_v1_kpi_periods__ma_ky__evaluations__ma_nd__reject_post",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_ky",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Ky"
+      }
+     },
+     {
+      "name": "ma_nd",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Nd"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DecisionIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/EvaluationOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/me/kpi": {
+   "get": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "KPI của tôi (mọi kỳ)",
+    "operationId": "my_kpi_api_v1_me_kpi_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/EvaluationOut"
+         },
+         "type": "array",
+         "title": "Response My Kpi Api V1 Me Kpi Get"
+        }
+       }
+      }
+     }
+    },
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ]
+   }
+  },
+  "/api/v1/kpi/users/{ma_nd}/history": {
+   "get": {
+    "tags": [
+     "4. Quản lý KPI"
+    ],
+    "summary": "Lịch sử KPI cũ của một người",
+    "operationId": "history_api_v1_kpi_users__ma_nd__history_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_nd",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Nd"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/dashboard/me": {
+   "get": {
+    "tags": [
+     "6. Báo cáo & Dashboard"
+    ],
+    "summary": "6.3 Dashboard cá nhân",
+    "operationId": "dashboard_api_v1_dashboard_me_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "tu_ngay",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Tu Ngay"
+      }
+     },
+     {
+      "name": "den_ngay",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Den Ngay"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/reports/portfolio": {
+   "get": {
+    "tags": [
+     "6. Báo cáo & Dashboard"
+    ],
+    "summary": "6.4 Báo cáo portfolio đa dự án (Ban giám đốc)",
+    "operationId": "portfolio_api_v1_reports_portfolio_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "trang_thai",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/TrangThaiDuAn"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Trang Thai"
+      }
+     },
+     {
+      "name": "ma_quan_ly",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Ma Quan Ly"
+      }
+     },
+     {
+      "name": "tu_ngay",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Tu Ngay"
+      }
+     },
+     {
+      "name": "den_ngay",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Den Ngay"
+      }
+     },
+     {
+      "name": "suc_khoe",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "pattern": "^(GREEN|AMBER|RED|GREY)$"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Suc Khoe"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/reports/projects/{ma_da}": {
+   "get": {
+    "tags": [
+     "6. Báo cáo & Dashboard"
+    ],
+    "summary": "6.2/6.4 Báo cáo tổng hợp một dự án",
+    "operationId": "project_report_api_v1_reports_projects__ma_da__get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/exports": {
+   "get": {
+    "tags": [
+     "6. Báo cáo & Dashboard"
+    ],
+    "summary": "6.5 Xuất báo cáo (csv | xlsx) – chỉ Quản lý dự án (DFD: File báo cáo → Quản lý dự án)",
+    "operationId": "export_api_v1_exports_get",
+    "security": [
+     {
+      "HTTPBearer": []
+     }
+    ],
+    "parameters": [
+     {
+      "name": "ma_da",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ma Da"
+      }
+     },
+     {
+      "name": "dataset",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "pattern": "^(tasks|timesheets|violations|kpi)$",
+       "title": "Dataset"
+      }
+     },
+     {
+      "name": "format",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "pattern": "^(csv|xlsx)$",
+       "default": "csv",
+       "title": "Format"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/health": {
+   "get": {
+    "tags": [
+     "Ops"
+    ],
+    "summary": "Health",
+    "operationId": "health_health_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "AssignIn": {
+    "properties": {
+     "ma_nd": {
+      "type": "integer",
+      "title": "Ma Nd"
+     },
+     "gio_du_kien": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Gio Du Kien"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_nd"
+    ],
+    "title": "AssignIn"
+   },
+   "AssignOut": {
+    "properties": {
+     "ma_cv": {
+      "type": "integer",
+      "title": "Ma Cv"
+     },
+     "ma_nd": {
+      "type": "integer",
+      "title": "Ma Nd"
+     },
+     "trang_thai_phan_cong": {
+      "$ref": "#/components/schemas/TrangThaiPhanCong"
+     },
+     "ngay_giao": {
+      "type": "string",
+      "format": "date",
+      "title": "Ngay Giao"
+     },
+     "gio_du_kien": {
+      "type": "number",
+      "title": "Gio Du Kien"
+     },
+     "ma_nguoi_giao": {
+      "type": "integer",
+      "title": "Ma Nguoi Giao"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_cv",
+     "ma_nd",
+     "trang_thai_phan_cong",
+     "ngay_giao",
+     "gio_du_kien",
+     "ma_nguoi_giao"
+    ],
+    "title": "AssignOut"
+   },
+   "AssignResult": {
+    "properties": {
+     "phan_cong": {
+      "$ref": "#/components/schemas/AssignOut"
+     },
+     "warnings": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Warnings",
+      "default": []
+     }
+    },
+    "type": "object",
+    "required": [
+     "phan_cong"
+    ],
+    "title": "AssignResult"
+   },
+   "AttachmentOut": {
+    "properties": {
+     "ma_tep": {
+      "type": "integer",
+      "title": "Ma Tep"
+     },
+     "ma_cv": {
+      "type": "integer",
+      "title": "Ma Cv"
+     },
+     "ten_tep": {
+      "type": "string",
+      "title": "Ten Tep"
+     },
+     "kich_thuoc": {
+      "type": "integer",
+      "title": "Kich Thuoc"
+     },
+     "ma_nguoi_tai": {
+      "type": "integer",
+      "title": "Ma Nguoi Tai"
+     },
+     "thoi_diem_tai": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Thoi Diem Tai"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_tep",
+     "ma_cv",
+     "ten_tep",
+     "kich_thuoc",
+     "ma_nguoi_tai",
+     "thoi_diem_tai"
+    ],
+    "title": "AttachmentOut"
+   },
+   "AuditOut": {
+    "properties": {
+     "ma_log": {
+      "type": "integer",
+      "title": "Ma Log"
+     },
+     "ma_nguoi_thuc_hien": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Nguoi Thuc Hien"
+     },
+     "thoi_diem": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Thoi Diem"
+     },
+     "loai_su_kien": {
+      "type": "string",
+      "title": "Loai Su Kien"
+     },
+     "noi_dung": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Noi Dung"
+     },
+     "doi_tuong": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Doi Tuong"
+     },
+     "ma_doi_tuong": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Doi Tuong"
+     },
+     "ma_du_an": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Du An"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_log",
+     "ma_nguoi_thuc_hien",
+     "thoi_diem",
+     "loai_su_kien",
+     "noi_dung",
+     "doi_tuong",
+     "ma_doi_tuong"
+    ],
+    "title": "AuditOut"
+   },
+   "BaselineIn": {
+    "properties": {
+     "ngay_bat_dau_goc": {
+      "type": "string",
+      "format": "date",
+      "title": "Ngay Bat Dau Goc"
+     },
+     "ngay_ket_thuc_goc": {
+      "type": "string",
+      "format": "date",
+      "title": "Ngay Ket Thuc Goc"
+     },
+     "gio_du_kien_goc": {
+      "type": "number",
+      "maximum": 10000.0,
+      "minimum": 0.0,
+      "title": "Gio Du Kien Goc"
+     },
+     "chi_phi_ke_hoach_goc": {
+      "type": "number",
+      "minimum": 0.0,
+      "title": "Chi Phi Ke Hoach Goc"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ngay_bat_dau_goc",
+     "ngay_ket_thuc_goc",
+     "gio_du_kien_goc",
+     "chi_phi_ke_hoach_goc"
+    ],
+    "title": "BaselineIn"
+   },
+   "BaselineOut": {
+    "properties": {
+     "ma_cv": {
+      "type": "integer",
+      "title": "Ma Cv"
+     },
+     "ngay_bat_dau_goc": {
+      "type": "string",
+      "format": "date",
+      "title": "Ngay Bat Dau Goc"
+     },
+     "ngay_ket_thuc_goc": {
+      "type": "string",
+      "format": "date",
+      "title": "Ngay Ket Thuc Goc"
+     },
+     "gio_du_kien_goc": {
+      "type": "number",
+      "title": "Gio Du Kien Goc"
+     },
+     "chi_phi_ke_hoach_goc": {
+      "type": "number",
+      "title": "Chi Phi Ke Hoach Goc"
+     },
+     "khoa_luc": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Khoa Luc"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_cv",
+     "ngay_bat_dau_goc",
+     "ngay_ket_thuc_goc",
+     "gio_du_kien_goc",
+     "chi_phi_ke_hoach_goc",
+     "khoa_luc"
+    ],
+    "title": "BaselineOut"
+   },
+   "Body_upload_api_v1_tasks__ma_cv__attachments_post": {
+    "properties": {
+     "file": {
+      "type": "string",
+      "contentMediaType": "application/octet-stream",
+      "title": "File"
+     }
+    },
+    "type": "object",
+    "required": [
+     "file"
+    ],
+    "title": "Body_upload_api_v1_tasks__ma_cv__attachments_post"
+   },
+   "ChangePwdIn": {
+    "properties": {
+     "old_password": {
+      "type": "string",
+      "title": "Old Password"
+     },
+     "new_password": {
+      "type": "string",
+      "maxLength": 128,
+      "minLength": 8,
+      "title": "New Password"
+     }
+    },
+    "type": "object",
+    "required": [
+     "old_password",
+     "new_password"
+    ],
+    "title": "ChangePwdIn"
+   },
+   "CloseIn": {
+    "properties": {
+     "force": {
+      "type": "boolean",
+      "title": "Force",
+      "default": false
+     },
+     "ghi_chu": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ghi Chu"
+     }
+    },
+    "type": "object",
+    "title": "CloseIn"
+   },
+   "ConcludeIn": {
+    "properties": {
+     "ket_luan": {
+      "type": "string",
+      "enum": [
+       "CONFIRMED",
+       "DISMISSED"
+      ],
+      "title": "Ket Luan"
+     },
+     "ghi_chu": {
+      "type": "string",
+      "maxLength": 5000,
+      "minLength": 3,
+      "title": "Ghi Chu"
+     },
+     "ma_ky_ap_dung": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Ky Ap Dung"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ket_luan",
+     "ghi_chu"
+    ],
+    "title": "ConcludeIn"
+   },
+   "ConfigIn": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/ConfigItem"
+      },
+      "type": "array",
+      "maxItems": 20,
+      "minItems": 1,
+      "title": "Items"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items"
+    ],
+    "title": "ConfigIn"
+   },
+   "ConfigItem": {
+    "properties": {
+     "ma_tieu_chi": {
+      "type": "integer",
+      "title": "Ma Tieu Chi"
+     },
+     "trong_so": {
+      "type": "number",
+      "maximum": 100.0,
+      "exclusiveMinimum": 0.0,
+      "title": "Trong So"
+     },
+     "chi_tieu": {
+      "type": "number",
+      "maximum": 100000.0,
+      "exclusiveMinimum": 0.0,
+      "title": "Chi Tieu"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_tieu_chi",
+     "trong_so",
+     "chi_tieu"
+    ],
+    "title": "ConfigItem"
+   },
+   "ConfigOut": {
+    "properties": {
+     "ma_ky": {
+      "type": "integer",
+      "title": "Ma Ky"
+     },
+     "items": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "tong_trong_so": {
+      "type": "number",
+      "title": "Tong Trong So"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_ky",
+     "items",
+     "tong_trong_so"
+    ],
+    "title": "ConfigOut"
+   },
+   "CriterionIn": {
+    "properties": {
+     "ten_tieu_chi": {
+      "type": "string",
+      "maxLength": 150,
+      "minLength": 2,
+      "title": "Ten Tieu Chi"
+     },
+     "mo_ta_cach_tinh": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mo Ta Cach Tinh"
+     },
+     "don_vi": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 30
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Don Vi"
+     },
+     "nguon_du_lieu": {
+      "$ref": "#/components/schemas/NguonDuLieuKPI",
+      "default": "MANUAL"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ten_tieu_chi"
+    ],
+    "title": "CriterionIn"
+   },
+   "CriterionOut": {
+    "properties": {
+     "ma_tieu_chi": {
+      "type": "integer",
+      "title": "Ma Tieu Chi"
+     },
+     "ten_tieu_chi": {
+      "type": "string",
+      "title": "Ten Tieu Chi"
+     },
+     "mo_ta_cach_tinh": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mo Ta Cach Tinh"
+     },
+     "don_vi": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Don Vi"
+     },
+     "nguon_du_lieu": {
+      "$ref": "#/components/schemas/NguonDuLieuKPI"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_tieu_chi",
+     "ten_tieu_chi",
+     "mo_ta_cach_tinh",
+     "don_vi",
+     "nguon_du_lieu"
+    ],
+    "title": "CriterionOut"
+   },
+   "CriterionUpdate": {
+    "properties": {
+     "ten_tieu_chi": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 150,
+        "minLength": 2
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ten Tieu Chi"
+     },
+     "mo_ta_cach_tinh": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mo Ta Cach Tinh"
+     },
+     "don_vi": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 30
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Don Vi"
+     },
+     "nguon_du_lieu": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/NguonDuLieuKPI"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "type": "object",
+    "title": "CriterionUpdate"
+   },
+   "DecisionIn": {
+    "properties": {
+     "nhan_xet": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 5000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Nhan Xet"
+     }
+    },
+    "type": "object",
+    "title": "DecisionIn"
+   },
+   "EpicIn": {
+    "properties": {
+     "ten_epic": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Ten Epic"
+     },
+     "mo_ta": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mo Ta"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ten_epic"
+    ],
+    "title": "EpicIn"
+   },
+   "EpicOut": {
+    "properties": {
+     "ma_epic": {
+      "type": "integer",
+      "title": "Ma Epic"
+     },
+     "ma_du_an": {
+      "type": "integer",
+      "title": "Ma Du An"
+     },
+     "ten_epic": {
+      "type": "string",
+      "title": "Ten Epic"
+     },
+     "mo_ta": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mo Ta"
+     },
+     "trang_thai": {
+      "type": "string",
+      "title": "Trang Thai"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_epic",
+     "ma_du_an",
+     "ten_epic",
+     "mo_ta",
+     "trang_thai"
+    ],
+    "title": "EpicOut"
+   },
+   "EvaluationOut": {
+    "properties": {
+     "diem_ky_truoc": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Diem Ky Truoc"
+     },
+     "ma_ky": {
+      "type": "integer",
+      "title": "Ma Ky"
+     },
+     "ma_nguoi_dung": {
+      "type": "integer",
+      "title": "Ma Nguoi Dung"
+     },
+     "ho_ten": {
+      "type": "string",
+      "title": "Ho Ten"
+     },
+     "trang_thai": {
+      "$ref": "#/components/schemas/TrangThaiDanhGia"
+     },
+     "diem_goc": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Diem Goc"
+     },
+     "diem_tru": {
+      "type": "number",
+      "title": "Diem Tru"
+     },
+     "diem_tong": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Diem Tong"
+     },
+     "ma_nguoi_duyet": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Nguoi Duyet"
+     },
+     "ngay_xac_nhan": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ngay Xac Nhan"
+     },
+     "ngay_duyet": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ngay Duyet"
+     },
+     "nhan_xet": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Nhan Xet"
+     },
+     "chi_tiet": {
+      "items": {
+       "additionalProperties": true,
+       "type": "object"
+      },
+      "type": "array",
+      "title": "Chi Tiet",
+      "default": []
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_ky",
+     "ma_nguoi_dung",
+     "ho_ten",
+     "trang_thai",
+     "diem_goc",
+     "diem_tru",
+     "diem_tong",
+     "ma_nguoi_duyet",
+     "ngay_xac_nhan",
+     "ngay_duyet",
+     "nhan_xet"
+    ],
+    "title": "EvaluationOut"
+   },
+   "ExplainIn": {
+    "properties": {
+     "noi_dung": {
+      "type": "string",
+      "maxLength": 5000,
+      "minLength": 5,
+      "title": "Noi Dung"
+     },
+     "duong_dan_bang_chung": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 500
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Duong Dan Bang Chung"
+     }
+    },
+    "type": "object",
+    "required": [
+     "noi_dung"
+    ],
+    "title": "ExplainIn"
+   },
+   "ExplanationOut": {
+    "properties": {
+     "ma_gt": {
+      "type": "integer",
+      "title": "Ma Gt"
+     },
+     "ma_vp": {
+      "type": "integer",
+      "title": "Ma Vp"
+     },
+     "noi_dung": {
+      "type": "string",
+      "title": "Noi Dung"
+     },
+     "thoi_diem_gui": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Thoi Diem Gui"
+     },
+     "duong_dan_bang_chung": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Duong Dan Bang Chung"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_gt",
+     "ma_vp",
+     "noi_dung",
+     "thoi_diem_gui",
+     "duong_dan_bang_chung"
+    ],
+    "title": "ExplanationOut"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "KetQuaDuyet": {
+    "type": "string",
+    "enum": [
+     "APPROVED",
+     "REJECTED"
+    ],
+    "title": "KetQuaDuyet"
+   },
+   "LoaiNguoiDung": {
+    "type": "string",
+    "enum": [
+     "QUAN_LY",
+     "NHAN_VIEN"
+    ],
+    "title": "LoaiNguoiDung"
+   },
+   "LoginIn": {
+    "properties": {
+     "email": {
+      "type": "string",
+      "maxLength": 255,
+      "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+      "title": "Email"
+     },
+     "password": {
+      "type": "string",
+      "title": "Password"
+     }
+    },
+    "type": "object",
+    "required": [
+     "email",
+     "password"
+    ],
+    "title": "LoginIn"
+   },
+   "ManualIn": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/ManualItem"
+      },
+      "type": "array",
+      "maxItems": 500,
+      "minItems": 1,
+      "title": "Items"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items"
+    ],
+    "title": "ManualIn"
+   },
+   "ManualItem": {
+    "properties": {
+     "ma_nd": {
+      "type": "integer",
+      "title": "Ma Nd"
+     },
+     "ma_tieu_chi": {
+      "type": "integer",
+      "title": "Ma Tieu Chi"
+     },
+     "gia_tri": {
+      "type": "number",
+      "maximum": 100000.0,
+      "minimum": 0.0,
+      "title": "Gia Tri"
+     },
+     "ghi_chu": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ghi Chu"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_nd",
+     "ma_tieu_chi",
+     "gia_tri"
+    ],
+    "title": "ManualItem"
+   },
+   "MeOut": {
+    "properties": {
+     "ma_nd": {
+      "type": "integer",
+      "title": "Ma Nd"
+     },
+     "email": {
+      "type": "string",
+      "title": "Email"
+     },
+     "ho_ten": {
+      "type": "string",
+      "title": "Ho Ten"
+     },
+     "ma_vai_tro_he_thong": {
+      "type": "integer",
+      "title": "Ma Vai Tro He Thong"
+     },
+     "vai_tro": {
+      "type": "string",
+      "title": "Vai Tro"
+     },
+     "trang_thai": {
+      "$ref": "#/components/schemas/TrangThaiNguoiDung"
+     },
+     "loai": {
+      "$ref": "#/components/schemas/LoaiNguoiDung"
+     },
+     "ma_quan_ly": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Quan Ly"
+     },
+     "don_gia_gio": {
+      "type": "number",
+      "title": "Don Gia Gio",
+      "default": 0
+     },
+     "permissions": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Permissions"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_nd",
+     "email",
+     "ho_ten",
+     "ma_vai_tro_he_thong",
+     "vai_tro",
+     "trang_thai",
+     "loai",
+     "permissions"
+    ],
+    "title": "MeOut"
+   },
+   "MemberAdd": {
+    "properties": {
+     "ma_nguoi_dung": {
+      "type": "integer",
+      "title": "Ma Nguoi Dung"
+     },
+     "vai_tro": {
+      "$ref": "#/components/schemas/ProjRole",
+      "default": "MEMBER"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_nguoi_dung"
+    ],
+    "title": "MemberAdd"
+   },
+   "MemberOut": {
+    "properties": {
+     "ma_du_an": {
+      "type": "integer",
+      "title": "Ma Du An"
+     },
+     "ma_nguoi_dung": {
+      "type": "integer",
+      "title": "Ma Nguoi Dung"
+     },
+     "ho_ten": {
+      "type": "string",
+      "title": "Ho Ten"
+     },
+     "email": {
+      "type": "string",
+      "title": "Email"
+     },
+     "vai_tro": {
+      "type": "string",
+      "title": "Vai Tro"
+     },
+     "ngay_tham_gia": {
+      "type": "string",
+      "format": "date",
+      "title": "Ngay Tham Gia"
+     },
+     "ngay_roi": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ngay Roi"
+     },
+     "trang_thai": {
+      "$ref": "#/components/schemas/TrangThaiThanhVien"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_du_an",
+     "ma_nguoi_dung",
+     "ho_ten",
+     "email",
+     "vai_tro",
+     "ngay_tham_gia",
+     "ngay_roi",
+     "trang_thai"
+    ],
+    "title": "MemberOut"
+   },
+   "MemberRoleUpdate": {
+    "properties": {
+     "vai_tro": {
+      "$ref": "#/components/schemas/ProjRole"
+     }
+    },
+    "type": "object",
+    "required": [
+     "vai_tro"
+    ],
+    "title": "MemberRoleUpdate"
+   },
+   "MilestoneIn": {
+    "properties": {
+     "ten_moc": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 2,
+      "title": "Ten Moc"
+     },
+     "han_hoan_thanh": {
+      "type": "string",
+      "format": "date",
+      "title": "Han Hoan Thanh"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ten_moc",
+     "han_hoan_thanh"
+    ],
+    "title": "MilestoneIn"
+   },
+   "MilestoneOut": {
+    "properties": {
+     "ma_moc": {
+      "type": "integer",
+      "title": "Ma Moc"
+     },
+     "ma_du_an": {
+      "type": "integer",
+      "title": "Ma Du An"
+     },
+     "ten_moc": {
+      "type": "string",
+      "title": "Ten Moc"
+     },
+     "han_hoan_thanh": {
+      "type": "string",
+      "format": "date",
+      "title": "Han Hoan Thanh"
+     },
+     "trang_thai": {
+      "$ref": "#/components/schemas/TrangThaiMoc"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_moc",
+     "ma_du_an",
+     "ten_moc",
+     "han_hoan_thanh",
+     "trang_thai"
+    ],
+    "title": "MilestoneOut"
+   },
+   "MilestoneUpdate": {
+    "properties": {
+     "ten_moc": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200,
+        "minLength": 2
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ten Moc"
+     },
+     "han_hoan_thanh": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Han Hoan Thanh"
+     },
+     "trang_thai": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/TrangThaiMoc"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "type": "object",
+    "title": "MilestoneUpdate"
+   },
+   "Msg": {
+    "properties": {
+     "message": {
+      "type": "string",
+      "title": "Message",
+      "default": "ok"
+     }
+    },
+    "type": "object",
+    "title": "Msg"
+   },
+   "NguonDuLieuKPI": {
+    "type": "string",
+    "enum": [
+     "TASK_COMPLETION",
+     "ON_TIME_RATE",
+     "HOURS_UTILIZATION",
+     "MANUAL"
+    ],
+    "title": "NguonDuLieuKPI"
+   },
+   "NotificationOut": {
+    "properties": {
+     "ma_tb": {
+      "type": "integer",
+      "title": "Ma Tb"
+     },
+     "loai": {
+      "type": "string",
+      "title": "Loai"
+     },
+     "tieu_de": {
+      "type": "string",
+      "title": "Tieu De"
+     },
+     "noi_dung": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Noi Dung"
+     },
+     "ma_cv": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Cv"
+     },
+     "da_doc": {
+      "type": "boolean",
+      "title": "Da Doc"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_tb",
+     "loai",
+     "tieu_de",
+     "noi_dung",
+     "ma_cv",
+     "da_doc",
+     "created_at"
+    ],
+    "title": "NotificationOut"
+   },
+   "Page_AuditOut_": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/AuditOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "page": {
+      "type": "integer",
+      "title": "Page"
+     },
+     "size": {
+      "type": "integer",
+      "title": "Size"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "page",
+     "size"
+    ],
+    "title": "Page[AuditOut]"
+   },
+   "Page_NotificationOut_": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/NotificationOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "page": {
+      "type": "integer",
+      "title": "Page"
+     },
+     "size": {
+      "type": "integer",
+      "title": "Size"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "page",
+     "size"
+    ],
+    "title": "Page[NotificationOut]"
+   },
+   "Page_ProjectOut_": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/ProjectOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "page": {
+      "type": "integer",
+      "title": "Page"
+     },
+     "size": {
+      "type": "integer",
+      "title": "Size"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "page",
+     "size"
+    ],
+    "title": "Page[ProjectOut]"
+   },
+   "Page_TaskOut_": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/TaskOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "page": {
+      "type": "integer",
+      "title": "Page"
+     },
+     "size": {
+      "type": "integer",
+      "title": "Size"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "page",
+     "size"
+    ],
+    "title": "Page[TaskOut]"
+   },
+   "Page_TimesheetOut_": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/TimesheetOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "page": {
+      "type": "integer",
+      "title": "Page"
+     },
+     "size": {
+      "type": "integer",
+      "title": "Size"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "page",
+     "size"
+    ],
+    "title": "Page[TimesheetOut]"
+   },
+   "Page_UserOut_": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/UserOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "page": {
+      "type": "integer",
+      "title": "Page"
+     },
+     "size": {
+      "type": "integer",
+      "title": "Size"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "page",
+     "size"
+    ],
+    "title": "Page[UserOut]"
+   },
+   "Page_ViolationOut_": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/ViolationOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "page": {
+      "type": "integer",
+      "title": "Page"
+     },
+     "size": {
+      "type": "integer",
+      "title": "Size"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "page",
+     "size"
+    ],
+    "title": "Page[ViolationOut]"
+   },
+   "PeriodIn": {
+    "properties": {
+     "ten_ky": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 2,
+      "title": "Ten Ky"
+     },
+     "tu_ngay": {
+      "type": "string",
+      "format": "date",
+      "title": "Tu Ngay"
+     },
+     "den_ngay": {
+      "type": "string",
+      "format": "date",
+      "title": "Den Ngay"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ten_ky",
+     "tu_ngay",
+     "den_ngay"
+    ],
+    "title": "PeriodIn"
+   },
+   "PeriodOut": {
+    "properties": {
+     "ma_ky": {
+      "type": "integer",
+      "title": "Ma Ky"
+     },
+     "ma_du_an": {
+      "type": "integer",
+      "title": "Ma Du An"
+     },
+     "ten_ky": {
+      "type": "string",
+      "title": "Ten Ky"
+     },
+     "tu_ngay": {
+      "type": "string",
+      "format": "date",
+      "title": "Tu Ngay"
+     },
+     "den_ngay": {
+      "type": "string",
+      "format": "date",
+      "title": "Den Ngay"
+     },
+     "trang_thai": {
+      "$ref": "#/components/schemas/TrangThaiKy"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_ky",
+     "ma_du_an",
+     "ten_ky",
+     "tu_ngay",
+     "den_ngay",
+     "trang_thai"
+    ],
+    "title": "PeriodOut"
+   },
+   "ProgressIn": {
+    "properties": {
+     "ty_le_hoan_thanh": {
+      "type": "integer",
+      "maximum": 100.0,
+      "minimum": 0.0,
+      "title": "Ty Le Hoan Thanh"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ty_le_hoan_thanh"
+    ],
+    "title": "ProgressIn"
+   },
+   "ProjRole": {
+    "type": "string",
+    "enum": [
+     "PM",
+     "TEAM_LEAD",
+     "MEMBER"
+    ],
+    "title": "ProjRole"
+   },
+   "ProjectCreate": {
+    "properties": {
+     "ten_du_an": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 3,
+      "title": "Ten Du An"
+     },
+     "muc_tieu": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 5000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Muc Tieu"
+     },
+     "ngay_bat_dau": {
+      "type": "string",
+      "format": "date",
+      "title": "Ngay Bat Dau"
+     },
+     "ngay_ket_thuc_du_kien": {
+      "type": "string",
+      "format": "date",
+      "title": "Ngay Ket Thuc Du Kien"
+     },
+     "ngan_sach_gio": {
+      "type": "number",
+      "maximum": 10000000.0,
+      "minimum": 0.0,
+      "title": "Ngan Sach Gio",
+      "default": 0
+     },
+     "ma_quan_ly": {
+      "type": "integer",
+      "title": "Ma Quan Ly"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ten_du_an",
+     "ngay_bat_dau",
+     "ngay_ket_thuc_du_kien",
+     "ma_quan_ly"
+    ],
+    "title": "ProjectCreate"
+   },
+   "ProjectGoalsUpdate": {
+    "properties": {
+     "version": {
+      "type": "integer",
+      "title": "Version"
+     },
+     "muc_tieu": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 5000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Muc Tieu"
+     },
+     "ngay_bat_dau": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ngay Bat Dau"
+     },
+     "ngay_ket_thuc_du_kien": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ngay Ket Thuc Du Kien"
+     },
+     "ngan_sach_gio": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ngan Sach Gio"
+     }
+    },
+    "type": "object",
+    "required": [
+     "version"
+    ],
+    "title": "ProjectGoalsUpdate"
+   },
+   "ProjectInfoUpdate": {
+    "properties": {
+     "version": {
+      "type": "integer",
+      "title": "Version"
+     },
+     "ten_du_an": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200,
+        "minLength": 3
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ten Du An"
+     },
+     "muc_tieu": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 5000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Muc Tieu"
+     }
+    },
+    "type": "object",
+    "required": [
+     "version"
+    ],
+    "title": "ProjectInfoUpdate"
+   },
+   "ProjectOut": {
+    "properties": {
+     "ma_du_an": {
+      "type": "integer",
+      "title": "Ma Du An"
+     },
+     "ten_du_an": {
+      "type": "string",
+      "title": "Ten Du An"
+     },
+     "muc_tieu": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Muc Tieu"
+     },
+     "ngay_bat_dau": {
+      "type": "string",
+      "format": "date",
+      "title": "Ngay Bat Dau"
+     },
+     "ngay_ket_thuc_du_kien": {
+      "type": "string",
+      "format": "date",
+      "title": "Ngay Ket Thuc Du Kien"
+     },
+     "ngan_sach_gio": {
+      "type": "number",
+      "title": "Ngan Sach Gio"
+     },
+     "trang_thai": {
+      "$ref": "#/components/schemas/TrangThaiDuAn"
+     },
+     "ngay_dong": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ngay Dong"
+     },
+     "ma_quan_ly": {
+      "type": "integer",
+      "title": "Ma Quan Ly"
+     },
+     "version": {
+      "type": "integer",
+      "title": "Version"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_du_an",
+     "ten_du_an",
+     "muc_tieu",
+     "ngay_bat_dau",
+     "ngay_ket_thuc_du_kien",
+     "ngan_sach_gio",
+     "trang_thai",
+     "ngay_dong",
+     "ma_quan_ly",
+     "version"
+    ],
+    "title": "ProjectOut"
+   },
+   "RefreshIn": {
+    "properties": {
+     "refresh_token": {
+      "type": "string",
+      "title": "Refresh Token"
+     }
+    },
+    "type": "object",
+    "required": [
+     "refresh_token"
+    ],
+    "title": "RefreshIn"
+   },
+   "ResetPwdIn": {
+    "properties": {
+     "new_password": {
+      "type": "string",
+      "maxLength": 128,
+      "minLength": 8,
+      "title": "New Password"
+     }
+    },
+    "type": "object",
+    "required": [
+     "new_password"
+    ],
+    "title": "ResetPwdIn"
+   },
+   "ReviewIn": {
+    "properties": {
+     "ket_qua": {
+      "$ref": "#/components/schemas/KetQuaDuyet"
+     },
+     "nhan_xet": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 5000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Nhan Xet"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ket_qua"
+    ],
+    "title": "ReviewIn"
+   },
+   "ReviewOut": {
+    "properties": {
+     "ma_duyet": {
+      "type": "integer",
+      "title": "Ma Duyet"
+     },
+     "ma_cv": {
+      "type": "integer",
+      "title": "Ma Cv"
+     },
+     "ma_nguoi_duyet": {
+      "type": "integer",
+      "title": "Ma Nguoi Duyet"
+     },
+     "ket_qua": {
+      "$ref": "#/components/schemas/KetQuaDuyet"
+     },
+     "nhan_xet": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Nhan Xet"
+     },
+     "thoi_diem_duyet": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Thoi Diem Duyet"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_duyet",
+     "ma_cv",
+     "ma_nguoi_duyet",
+     "ket_qua",
+     "nhan_xet",
+     "thoi_diem_duyet"
+    ],
+    "title": "ReviewOut"
+   },
+   "RoleOut": {
+    "properties": {
+     "ma_vai_tro": {
+      "type": "integer",
+      "title": "Ma Vai Tro"
+     },
+     "code": {
+      "type": "string",
+      "title": "Code"
+     },
+     "ten_vai_tro": {
+      "type": "string",
+      "title": "Ten Vai Tro"
+     },
+     "pham_vi": {
+      "type": "string",
+      "title": "Pham Vi"
+     },
+     "permissions": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Permissions"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_vai_tro",
+     "code",
+     "ten_vai_tro",
+     "pham_vi",
+     "permissions"
+    ],
+    "title": "RoleOut"
+   },
+   "RuleIn": {
+    "properties": {
+     "ten_quy_dinh": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 2,
+      "title": "Ten Quy Dinh"
+     },
+     "diem_tru": {
+      "type": "number",
+      "maximum": 100.0,
+      "exclusiveMinimum": 0.0,
+      "title": "Diem Tru"
+     },
+     "tu_ngay": {
+      "type": "string",
+      "format": "date",
+      "title": "Tu Ngay"
+     },
+     "den_ngay": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Den Ngay"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ten_quy_dinh",
+     "diem_tru",
+     "tu_ngay"
+    ],
+    "title": "RuleIn"
+   },
+   "RuleOut": {
+    "properties": {
+     "ma_qd": {
+      "type": "integer",
+      "title": "Ma Qd"
+     },
+     "ten_quy_dinh": {
+      "type": "string",
+      "title": "Ten Quy Dinh"
+     },
+     "diem_tru": {
+      "type": "number",
+      "title": "Diem Tru"
+     },
+     "tu_ngay": {
+      "type": "string",
+      "format": "date",
+      "title": "Tu Ngay"
+     },
+     "den_ngay": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Den Ngay"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_qd",
+     "ten_quy_dinh",
+     "diem_tru",
+     "tu_ngay",
+     "den_ngay"
+    ],
+    "title": "RuleOut"
+   },
+   "RuleUpdate": {
+    "properties": {
+     "ten_quy_dinh": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200,
+        "minLength": 2
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ten Quy Dinh"
+     },
+     "diem_tru": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "exclusiveMinimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Diem Tru"
+     },
+     "tu_ngay": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tu Ngay"
+     },
+     "den_ngay": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Den Ngay"
+     }
+    },
+    "type": "object",
+    "title": "RuleUpdate"
+   },
+   "SnapshotOut": {
+    "properties": {
+     "ma_cs": {
+      "type": "integer",
+      "title": "Ma Cs"
+     },
+     "ma_du_an": {
+      "type": "integer",
+      "title": "Ma Du An"
+     },
+     "ngay": {
+      "type": "string",
+      "format": "date",
+      "title": "Ngay"
+     },
+     "pv": {
+      "type": "number",
+      "title": "Pv"
+     },
+     "ev": {
+      "type": "number",
+      "title": "Ev"
+     },
+     "ac": {
+      "type": "number",
+      "title": "Ac"
+     },
+     "spi": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Spi"
+     },
+     "cpi": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Cpi"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_cs",
+     "ma_du_an",
+     "ngay",
+     "pv",
+     "ev",
+     "ac",
+     "spi",
+     "cpi"
+    ],
+    "title": "SnapshotOut"
+   },
+   "StatusIn": {
+    "properties": {
+     "trang_thai": {
+      "$ref": "#/components/schemas/TrangThaiDuAn"
+     }
+    },
+    "type": "object",
+    "required": [
+     "trang_thai"
+    ],
+    "title": "StatusIn"
+   },
+   "SubTaskIn": {
+    "properties": {
+     "ten_subtask": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Ten Subtask"
+     },
+     "mo_ta": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mo Ta"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ten_subtask"
+    ],
+    "title": "SubTaskIn"
+   },
+   "SubTaskOut": {
+    "properties": {
+     "ma_subtask": {
+      "type": "integer",
+      "title": "Ma Subtask"
+     },
+     "ma_cv": {
+      "type": "integer",
+      "title": "Ma Cv"
+     },
+     "ten_subtask": {
+      "type": "string",
+      "title": "Ten Subtask"
+     },
+     "mo_ta": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mo Ta"
+     },
+     "trang_thai": {
+      "type": "string",
+      "title": "Trang Thai"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_subtask",
+     "ma_cv",
+     "ten_subtask",
+     "mo_ta",
+     "trang_thai"
+    ],
+    "title": "SubTaskOut"
+   },
+   "SubTaskUpdate": {
+    "properties": {
+     "ten_subtask": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ten Subtask"
+     },
+     "mo_ta": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mo Ta"
+     },
+     "trang_thai": {
+      "anyOf": [
+       {
+        "type": "string",
+        "pattern": "^(TODO|DONE)$"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Trang Thai"
+     }
+    },
+    "type": "object",
+    "title": "SubTaskUpdate"
+   },
+   "TaskCreate": {
+    "properties": {
+     "ten_cv": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Ten Cv"
+     },
+     "mo_ta": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 10000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mo Ta"
+     },
+     "ma_moc": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Moc"
+     },
+     "ma_epic": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Epic"
+     },
+     "uu_tien": {
+      "$ref": "#/components/schemas/UuTien",
+      "default": "MEDIUM"
+     },
+     "ngay_bat_dau_du_kien": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ngay Bat Dau Du Kien"
+     },
+     "han_hoan_thanh": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Han Hoan Thanh"
+     },
+     "gio_du_kien": {
+      "type": "number",
+      "maximum": 10000.0,
+      "minimum": 0.0,
+      "title": "Gio Du Kien",
+      "default": 0
+     }
+    },
+    "type": "object",
+    "required": [
+     "ten_cv"
+    ],
+    "title": "TaskCreate"
+   },
+   "TaskOut": {
+    "properties": {
+     "ma_cv": {
+      "type": "integer",
+      "title": "Ma Cv"
+     },
+     "ma_du_an": {
+      "type": "integer",
+      "title": "Ma Du An"
+     },
+     "ma_moc": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Moc"
+     },
+     "ma_epic": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Epic"
+     },
+     "ten_cv": {
+      "type": "string",
+      "title": "Ten Cv"
+     },
+     "mo_ta": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mo Ta"
+     },
+     "trang_thai": {
+      "$ref": "#/components/schemas/TrangThaiTask"
+     },
+     "uu_tien": {
+      "$ref": "#/components/schemas/UuTien"
+     },
+     "ty_le_hoan_thanh": {
+      "type": "integer",
+      "title": "Ty Le Hoan Thanh"
+     },
+     "ngay_bat_dau_du_kien": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ngay Bat Dau Du Kien"
+     },
+     "han_hoan_thanh": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Han Hoan Thanh"
+     },
+     "gio_du_kien": {
+      "type": "number",
+      "title": "Gio Du Kien"
+     },
+     "ma_nguoi_tao": {
+      "type": "integer",
+      "title": "Ma Nguoi Tao"
+     },
+     "hoan_thanh_luc": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Hoan Thanh Luc"
+     },
+     "version": {
+      "type": "integer",
+      "title": "Version"
+     },
+     "assignees": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "title": "Assignees",
+      "default": []
+     },
+     "muc_do_khan": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Muc Do Khan"
+     },
+     "tre_han": {
+      "type": "boolean",
+      "title": "Tre Han",
+      "default": false
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_cv",
+     "ma_du_an",
+     "ma_moc",
+     "ma_epic",
+     "ten_cv",
+     "mo_ta",
+     "trang_thai",
+     "uu_tien",
+     "ty_le_hoan_thanh",
+     "ngay_bat_dau_du_kien",
+     "han_hoan_thanh",
+     "gio_du_kien",
+     "ma_nguoi_tao",
+     "hoan_thanh_luc",
+     "version"
+    ],
+    "title": "TaskOut"
+   },
+   "TaskUpdate": {
+    "properties": {
+     "version": {
+      "type": "integer",
+      "title": "Version"
+     },
+     "ten_cv": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ten Cv"
+     },
+     "mo_ta": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 10000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Mo Ta"
+     },
+     "ma_moc": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Moc"
+     },
+     "ma_epic": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Epic"
+     },
+     "uu_tien": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/UuTien"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "ngay_bat_dau_du_kien": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ngay Bat Dau Du Kien"
+     },
+     "han_hoan_thanh": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Han Hoan Thanh"
+     },
+     "gio_du_kien": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 10000.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Gio Du Kien"
+     }
+    },
+    "type": "object",
+    "required": [
+     "version"
+    ],
+    "title": "TaskUpdate"
+   },
+   "TimesheetIn": {
+    "properties": {
+     "bat_dau": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Bat Dau"
+     },
+     "ket_thuc": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Ket Thuc"
+     },
+     "noi_dung": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Noi Dung"
+     }
+    },
+    "type": "object",
+    "required": [
+     "bat_dau",
+     "ket_thuc"
+    ],
+    "title": "TimesheetIn"
+   },
+   "TimesheetOut": {
+    "properties": {
+     "ma_nk": {
+      "type": "integer",
+      "title": "Ma Nk"
+     },
+     "ma_cv": {
+      "type": "integer",
+      "title": "Ma Cv"
+     },
+     "ma_nd": {
+      "type": "integer",
+      "title": "Ma Nd"
+     },
+     "bat_dau": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Bat Dau"
+     },
+     "ket_thuc": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Ket Thuc"
+     },
+     "so_gio": {
+      "type": "number",
+      "title": "So Gio"
+     },
+     "noi_dung": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Noi Dung"
+     },
+     "chi_phi_thuc_te": {
+      "type": "number",
+      "title": "Chi Phi Thuc Te"
+     },
+     "tong_gio_tich_luy_task": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tong Gio Tich Luy Task"
+     },
+     "tong_gio_tich_luy_du_an": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tong Gio Tich Luy Du An"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_nk",
+     "ma_cv",
+     "ma_nd",
+     "bat_dau",
+     "ket_thuc",
+     "so_gio",
+     "noi_dung",
+     "chi_phi_thuc_te"
+    ],
+    "title": "TimesheetOut"
+   },
+   "TimesheetUpdate": {
+    "properties": {
+     "bat_dau": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Bat Dau"
+     },
+     "ket_thuc": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ket Thuc"
+     },
+     "noi_dung": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Noi Dung"
+     }
+    },
+    "type": "object",
+    "title": "TimesheetUpdate"
+   },
+   "TokenOut": {
+    "properties": {
+     "access_token": {
+      "type": "string",
+      "title": "Access Token"
+     },
+     "refresh_token": {
+      "type": "string",
+      "title": "Refresh Token"
+     },
+     "token_type": {
+      "type": "string",
+      "title": "Token Type",
+      "default": "bearer"
+     },
+     "user": {
+      "$ref": "#/components/schemas/UserOut"
+     }
+    },
+    "type": "object",
+    "required": [
+     "access_token",
+     "refresh_token",
+     "user"
+    ],
+    "title": "TokenOut"
+   },
+   "TrangThaiDanhGia": {
+    "type": "string",
+    "enum": [
+     "DRAFT",
+     "PROVISIONAL",
+     "MEMBER_CONFIRMED",
+     "APPROVED",
+     "REJECTED"
+    ],
+    "title": "TrangThaiDanhGia"
+   },
+   "TrangThaiDuAn": {
+    "type": "string",
+    "enum": [
+     "PLANNING",
+     "ACTIVE",
+     "ON_HOLD",
+     "COMPLETED",
+     "CLOSED"
+    ],
+    "title": "TrangThaiDuAn"
+   },
+   "TrangThaiKy": {
+    "type": "string",
+    "enum": [
+     "DRAFT",
+     "OPEN",
+     "CLOSED"
+    ],
+    "title": "TrangThaiKy"
+   },
+   "TrangThaiMoc": {
+    "type": "string",
+    "enum": [
+     "PENDING",
+     "ACHIEVED",
+     "MISSED"
+    ],
+    "title": "TrangThaiMoc"
+   },
+   "TrangThaiNguoiDung": {
+    "type": "string",
+    "enum": [
+     "ACTIVE",
+     "LOCKED",
+     "INACTIVE"
+    ],
+    "title": "TrangThaiNguoiDung"
+   },
+   "TrangThaiPhanCong": {
+    "type": "string",
+    "enum": [
+     "ASSIGNED",
+     "COMPLETED",
+     "CANCELLED"
+    ],
+    "title": "TrangThaiPhanCong"
+   },
+   "TrangThaiTask": {
+    "type": "string",
+    "enum": [
+     "TODO",
+     "IN_PROGRESS",
+     "IN_REVIEW",
+     "DONE",
+     "CANCELLED"
+    ],
+    "title": "TrangThaiTask"
+   },
+   "TrangThaiThanhVien": {
+    "type": "string",
+    "enum": [
+     "ACTIVE",
+     "LEFT"
+    ],
+    "title": "TrangThaiThanhVien"
+   },
+   "TrangThaiViPham": {
+    "type": "string",
+    "enum": [
+     "DRAFT",
+     "PENDING_EXPLANATION",
+     "EXPLAINED",
+     "CONFIRMED",
+     "DISMISSED"
+    ],
+    "title": "TrangThaiViPham"
+   },
+   "TransitionIn": {
+    "properties": {
+     "trang_thai": {
+      "$ref": "#/components/schemas/TrangThaiTask"
+     }
+    },
+    "type": "object",
+    "required": [
+     "trang_thai"
+    ],
+    "title": "TransitionIn"
+   },
+   "UserCreate": {
+    "properties": {
+     "email": {
+      "type": "string",
+      "maxLength": 255,
+      "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+      "title": "Email"
+     },
+     "ho_ten": {
+      "type": "string",
+      "maxLength": 150,
+      "minLength": 2,
+      "title": "Ho Ten"
+     },
+     "password": {
+      "type": "string",
+      "maxLength": 128,
+      "minLength": 8,
+      "title": "Password"
+     },
+     "vai_tro_he_thong": {
+      "type": "string",
+      "title": "Vai Tro He Thong",
+      "default": "EMPLOYEE"
+     },
+     "loai": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/LoaiNguoiDung"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "ma_quan_ly": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Quan Ly"
+     },
+     "don_gia_gio": {
+      "type": "number",
+      "minimum": 0.0,
+      "title": "Don Gia Gio",
+      "default": 0
+     }
+    },
+    "type": "object",
+    "required": [
+     "email",
+     "ho_ten",
+     "password"
+    ],
+    "title": "UserCreate"
+   },
+   "UserLookup": {
+    "properties": {
+     "ma_nd": {
+      "type": "integer",
+      "title": "Ma Nd"
+     },
+     "ho_ten": {
+      "type": "string",
+      "title": "Ho Ten"
+     },
+     "email": {
+      "type": "string",
+      "title": "Email"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_nd",
+     "ho_ten",
+     "email"
+    ],
+    "title": "UserLookup"
+   },
+   "UserOut": {
+    "properties": {
+     "ma_nd": {
+      "type": "integer",
+      "title": "Ma Nd"
+     },
+     "email": {
+      "type": "string",
+      "title": "Email"
+     },
+     "ho_ten": {
+      "type": "string",
+      "title": "Ho Ten"
+     },
+     "ma_vai_tro_he_thong": {
+      "type": "integer",
+      "title": "Ma Vai Tro He Thong"
+     },
+     "vai_tro": {
+      "type": "string",
+      "title": "Vai Tro"
+     },
+     "trang_thai": {
+      "$ref": "#/components/schemas/TrangThaiNguoiDung"
+     },
+     "loai": {
+      "$ref": "#/components/schemas/LoaiNguoiDung"
+     },
+     "ma_quan_ly": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Quan Ly"
+     },
+     "don_gia_gio": {
+      "type": "number",
+      "title": "Don Gia Gio",
+      "default": 0
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_nd",
+     "email",
+     "ho_ten",
+     "ma_vai_tro_he_thong",
+     "vai_tro",
+     "trang_thai",
+     "loai"
+    ],
+    "title": "UserOut"
+   },
+   "UserUpdate": {
+    "properties": {
+     "ho_ten": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 150,
+        "minLength": 2
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ho Ten"
+     },
+     "vai_tro_he_thong": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Vai Tro He Thong"
+     },
+     "trang_thai": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/TrangThaiNguoiDung"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "ma_quan_ly": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Quan Ly"
+     },
+     "don_gia_gio": {
+      "anyOf": [
+       {
+        "type": "number",
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Don Gia Gio"
+     }
+    },
+    "type": "object",
+    "title": "UserUpdate"
+   },
+   "UuTien": {
+    "type": "string",
+    "enum": [
+     "LOW",
+     "MEDIUM",
+     "HIGH",
+     "CRITICAL"
+    ],
+    "title": "UuTien"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   },
+   "ViolationIn": {
+    "properties": {
+     "ma_cv": {
+      "type": "integer",
+      "title": "Ma Cv"
+     },
+     "ma_nd": {
+      "type": "integer",
+      "title": "Ma Nd"
+     },
+     "ma_qd": {
+      "type": "integer",
+      "title": "Ma Qd"
+     },
+     "noi_dung": {
+      "type": "string",
+      "maxLength": 5000,
+      "minLength": 5,
+      "title": "Noi Dung"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_cv",
+     "ma_nd",
+     "ma_qd",
+     "noi_dung"
+    ],
+    "title": "ViolationIn"
+   },
+   "ViolationOut": {
+    "properties": {
+     "ma_vp": {
+      "type": "integer",
+      "title": "Ma Vp"
+     },
+     "ma_cv": {
+      "type": "integer",
+      "title": "Ma Cv"
+     },
+     "ma_nd": {
+      "type": "integer",
+      "title": "Ma Nd"
+     },
+     "ma_nguoi_lap": {
+      "type": "integer",
+      "title": "Ma Nguoi Lap"
+     },
+     "ma_qd": {
+      "type": "integer",
+      "title": "Ma Qd"
+     },
+     "noi_dung": {
+      "type": "string",
+      "title": "Noi Dung"
+     },
+     "trang_thai": {
+      "$ref": "#/components/schemas/TrangThaiViPham"
+     },
+     "thoi_diem": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Thoi Diem"
+     },
+     "han_giai_trinh": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Han Giai Trinh"
+     },
+     "ngay_xu_ly": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ngay Xu Ly"
+     },
+     "ket_luan": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ket Luan"
+     },
+     "ma_nguoi_xu_ly": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Nguoi Xu Ly"
+     },
+     "ma_ky_ap_dung": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Ma Ky Ap Dung"
+     },
+     "diem_tru": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Diem Tru"
+     },
+     "giai_trinh": {
+      "items": {
+       "$ref": "#/components/schemas/ExplanationOut"
+      },
+      "type": "array",
+      "title": "Giai Trinh",
+      "default": []
+     }
+    },
+    "type": "object",
+    "required": [
+     "ma_vp",
+     "ma_cv",
+     "ma_nd",
+     "ma_nguoi_lap",
+     "ma_qd",
+     "noi_dung",
+     "trang_thai",
+     "thoi_diem",
+     "han_giai_trinh",
+     "ngay_xu_ly",
+     "ket_luan",
+     "ma_nguoi_xu_ly",
+     "ma_ky_ap_dung"
+    ],
+    "title": "ViolationOut"
+   }
+  },
+  "securitySchemes": {
+   "HTTPBearer": {
+    "type": "http",
+    "scheme": "bearer"
+   }
+  }
+ }
+}

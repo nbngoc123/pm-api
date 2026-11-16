@@ -1,0 +1,856 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tài liệu hệ thống PM-KPI</title>
+<style>
+:root{--bg:#fff;--fg:#1d2433;--mut:#5b6577;--line:#dfe3ea;--soft:#f4f6fa;--acc:#1d5fd1;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12161f;--fg:#e6e9f0;--mut:#9aa4b8;--line:#2a3142;--soft:#1a2030;--acc:#7ab0ff;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12161f;--fg:#e6e9f0;--mut:#9aa4b8;--line:#2a3142;--soft:#1a2030;--acc:#7ab0ff;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:24px 18px 64px}
+h1{font-size:1.9rem;margin:.2em 0 .4em}h2{margin-top:2.2em;padding-top:.6em;border-top:1px solid var(--line)}h3{margin-top:1.8em}
+a{color:var(--acc)}code{background:var(--soft);padding:.1em .35em;border-radius:4px;font-size:.88em}
+.scroll,.diagram{overflow-x:auto;max-width:100%;margin:1em 0}.diagram{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:14px}
+table{border-collapse:collapse;font-size:.92rem}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}th{background:var(--soft)}
+.toc{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:6px 18px}.toc ul{margin:.3em 0}
+</style></head><body><main><h1 id="tai-lieu-he-thong-pm-kpi">Tài liệu hệ thống PM-KPI</h1>
+<p>Hệ thống <strong>Quản lý dự án &amp; KPI</strong> cho khoảng 250 nhân viên: tạo và theo dõi dự án, giao việc, chấm công, giám sát tiến độ (EVM), xử lý vi phạm và chấm KPI.</p>
+<div class="toc">
+<ul>
+<li><a href="#tai-lieu-he-thong-pm-kpi">Tài liệu hệ thống PM-KPI</a><ul>
+<li><a href="#1-tong-quan">1. Tổng quan</a></li>
+<li><a href="#2-kien-truc">2. Kiến trúc</a></li>
+<li><a href="#3-mo-hinh-du-lieu-erd">3. Mô hình dữ liệu (ERD)</a></li>
+<li><a href="#4-vong-oi-nghiep-vu">4. Vòng đời nghiệp vụ</a></li>
+<li><a href="#5-chuc-nang-theo-module">5. Chức năng theo module</a></li>
+<li><a href="#6-phan-quyen">6. Phân quyền</a></li>
+<li><a href="#7-quy-tac-nghiep-vu-chinh">7. Quy tắc nghiệp vụ chính</a></li>
+<li><a href="#8-van-hanh">8. Vận hành</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="1-tong-quan">1. Tổng quan</h2>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>Nhóm</th>
+<th>Nội dung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Người dùng</td>
+<td>Ban giám đốc, Quản lý dự án (PM), Trưởng nhóm, Thành viên, Quản trị hệ thống</td>
+</tr>
+<tr>
+<td>6 module (theo DFD)</td>
+<td>1 Dự án · 2 Công việc · 3 Tiến độ · 4 KPI · 5 Vi phạm &amp; chất lượng · 6 Báo cáo &amp; Dashboard</td>
+</tr>
+<tr>
+<td>5 kho dữ liệu</td>
+<td>D1 Hồ sơ dự án · D2 Hồ sơ công việc · D3 Nhật ký giờ làm · D4 Hồ sơ KPI · D5 Hồ sơ vi phạm</td>
+</tr>
+<tr>
+<td>Quy mô</td>
+<td>28 bảng · 109 thao tác API · 600 test tự động</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="2-kien-truc">2. Kiến trúc</h2>
+<div class="diagram"><pre class="mermaid">flowchart LR
+  FE["Frontend (Web)"] -->|"HTTPS + JWT"| API["FastAPI<br/>routers → services"]
+  API --> DB[("PostgreSQL 16")]
+  API --> FS[["Thư mục tệp đính kèm"]]
+  CRON["Job định kỳ<br/>cảnh báo + chụp chỉ số"] --> API
+  CRON --> DB
+</pre></div>
+
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>Thành phần</th>
+<th>Công nghệ</th>
+<th>Lý do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API</td>
+<td>FastAPI, Pydantic v2</td>
+<td>Kiểm tra dữ liệu chặt, tự sinh OpenAPI cho frontend</td>
+</tr>
+<tr>
+<td>Dữ liệu</td>
+<td>PostgreSQL 16, SQLAlchemy 2, Alembic</td>
+<td>Giao dịch ACID, migration có phiên bản</td>
+</tr>
+<tr>
+<td>Bảo mật</td>
+<td>JWT (30 phút) + refresh (7 ngày), PBKDF2, khóa tạm sau 5 lần sai</td>
+<td>Thu hồi token tức thì khi đổi mật khẩu</td>
+</tr>
+<tr>
+<td>Triển khai</td>
+<td>Docker Compose: db, migrate, api, cron</td>
+<td>Một máy chủ là đủ cho 250 người</td>
+</tr>
+</tbody>
+</table></div>
+<p>Mỗi request đi qua: xác thực JWT → kiểm quyền (hệ thống ∪ dự án) → service xử lý nghiệp vụ → ghi nhật ký → commit một giao dịch.</p>
+<h2 id="3-mo-hinh-du-lieu-erd">3. Mô hình dữ liệu (ERD)</h2>
+<p>Sơ đồ dưới được <strong>sinh tự động từ model trong code</strong> nên luôn khớp database. Cột có ghi chú “mở rộng” là cột ngoài ERD gốc của nhóm, đã khai báo công khai.
+Ký hiệu: <code>PK</code> khóa chính, <code>FK</code> khóa ngoại. Đường <code>||--o{</code> là quan hệ 1–N bắt buộc, <code>|o--o{</code> là 1–N không bắt buộc, <code>||--||</code> là 1–1.</p>
+<h3 id="tong-quan-28-bang">Tổng quan 28 bảng</h3>
+<p>Bảng ngoài ERD gốc (mở rộng): <code>chi_so_du_an</code>, <code>thong_bao</code>.</p>
+<div class="diagram"><pre class="mermaid">erDiagram
+  vai_tro ||--o{ nguoi_dung : "Giữ vai trò hệ thống"
+  nguoi_dung ||--|| quan_ly : "ISA"
+  nguoi_dung ||--|| nhan_vien : "ISA"
+  quan_ly |o--o{ nhan_vien : "Quản lý trực tiếp"
+  vai_tro ||--o{ vai_tro_quyen : "Gán"
+  quyen ||--o{ vai_tro_quyen : "Có"
+  nguoi_dung |o--o{ du_an : ""
+  quan_ly ||--o{ du_an : "Quản lý"
+  du_an ||--o{ thanh_vien_du_an : "Có"
+  nguoi_dung ||--o{ thanh_vien_du_an : "Tham gia"
+  vai_tro ||--o{ thanh_vien_du_an : "Áp dụng"
+  du_an ||--o{ moc_du_an : "Có"
+  du_an ||--o{ epic : "Bao gồm"
+  task ||--|| ke_hoach_goc : "Có kế hoạch"
+  du_an |o--o{ nhat_ky_he_thong : "Phát sinh"
+  nguoi_dung |o--o{ nhat_ky_he_thong : "Thực hiện"
+  du_an ||--o{ chi_so_du_an : "Chụp chỉ số"
+  nguoi_dung ||--o{ thong_bao : "Nhận"
+  task |o--o{ thong_bao : "Về"
+  nguoi_dung ||--o{ task : "Tạo"
+  moc_du_an |o--o{ task : "Gắn"
+  epic |o--o{ task : "Bao gồm"
+  du_an ||--o{ task : "Thuộc"
+  task ||--o{ sub_task : "Phân rã"
+  nguoi_dung ||--o{ tep_dinh_kem : "Tải lên"
+  task ||--o{ tep_dinh_kem : "Có tệp"
+  nguoi_dung ||--o{ phan_cong : "Giao"
+  nhan_vien ||--o{ phan_cong : "Nhận việc"
+  task ||--o{ phan_cong : "Được giao"
+  task ||--o{ xet_duyet_cong_viec : "Được duyệt"
+  nguoi_dung ||--o{ xet_duyet_cong_viec : "Duyệt"
+  nhan_vien ||--o{ nhat_ky_gio_lam : "Lập"
+  task ||--o{ nhat_ky_gio_lam : "Ghi giờ"
+  quan_ly |o--o{ vi_pham : "Kết luận"
+  nguoi_dung ||--o{ vi_pham : "Lập"
+  task ||--o{ vi_pham : "Phát sinh"
+  nhan_vien ||--o{ vi_pham : "Bị ghi nhận"
+  quy_dinh_vi_pham ||--o{ vi_pham : "Áp dụng"
+  ky_kpi |o--o{ vi_pham : "Tính trừ"
+  vi_pham ||--o{ giai_trinh : "Có"
+  du_an ||--o{ ky_kpi : "Có kỳ"
+  ky_kpi ||--o{ cau_hinh_kpi : "Cấu hình"
+  tieu_chi_kpi ||--o{ cau_hinh_kpi : "Được chọn"
+  ky_kpi ||--o{ danh_gia_kpi : "Có hồ sơ"
+  nguoi_dung ||--o{ danh_gia_kpi : "Được đánh giá"
+  quan_ly |o--o{ danh_gia_kpi : "Phê duyệt"
+  nguoi_dung ||--o{ chi_tiet_kpi : ""
+  danh_gia_kpi ||--o{ chi_tiet_kpi : "Gồm"
+  tieu_chi_kpi ||--o{ chi_tiet_kpi : ""
+  cau_hinh_kpi ||--o{ chi_tiet_kpi : "Áp dụng"
+  ky_kpi ||--o{ chi_tiet_kpi : ""
+</pre></div>
+
+<h3 id="nguoi-dung-va-phan-quyen">Người dùng và phân quyền</h3>
+<div class="diagram"><pre class="mermaid">erDiagram
+  nguoi_dung {
+    int ma_nd PK
+    string email
+    string ho_ten
+    string mat_khau_hash  "mở rộng"
+    int ma_vai_tro_he_thong FK
+    string trang_thai
+    string loai  "mở rộng"
+    int token_version  "mở rộng"
+    int so_lan_dang_nhap_sai  "mở rộng"
+    datetime khoa_den  "mở rộng"
+    datetime created_at  "mở rộng"
+  }
+  quan_ly {
+    int ma_nd PK, FK
+  }
+  nhan_vien {
+    int ma_nd PK, FK
+    int ma_quan_ly FK "mở rộng"
+    decimal don_gia_gio  "mở rộng"
+  }
+  vai_tro {
+    int ma_vai_tro PK
+    string code  "mở rộng"
+    string ten_vai_tro
+    string pham_vi
+  }
+  quyen {
+    int ma_quyen PK
+    string code  "mở rộng"
+    string ten_quyen
+    string mo_ta
+  }
+  vai_tro_quyen {
+    int ma_vai_tro PK, FK
+    int ma_quyen PK, FK
+  }
+  vai_tro ||--o{ nguoi_dung : "Giữ vai trò hệ thống"
+  nguoi_dung ||--|| quan_ly : "ISA"
+  nguoi_dung ||--|| nhan_vien : "ISA"
+  quan_ly |o--o{ nhan_vien : "Quản lý trực tiếp"
+  vai_tro ||--o{ vai_tro_quyen : "Gán"
+  quyen ||--o{ vai_tro_quyen : "Có"
+</pre></div>
+
+<h3 id="d1-ho-so-du-an">D1 · Hồ sơ dự án</h3>
+<div class="diagram"><pre class="mermaid">erDiagram
+  du_an {
+    int ma_du_an PK
+    string ten_du_an
+    string muc_tieu
+    date ngay_bat_dau
+    date ngay_ket_thuc_du_kien
+    decimal ngan_sach_gio
+    string trang_thai
+    date ngay_dong
+    int ma_quan_ly FK
+    int created_by FK "mở rộng"
+    datetime created_at  "mở rộng"
+    int version  "mở rộng"
+  }
+  thanh_vien_du_an {
+    int ma_du_an PK, FK
+    int ma_nguoi_dung PK, FK
+    int ma_vai_tro FK
+    date ngay_tham_gia
+    date ngay_roi
+    string trang_thai
+  }
+  moc_du_an {
+    int ma_moc PK
+    int ma_du_an FK
+    string ten_moc
+    date han_hoan_thanh
+    string trang_thai
+  }
+  epic {
+    int ma_epic PK
+    int ma_du_an FK
+    string ten_epic
+    string mo_ta
+    string trang_thai
+  }
+  ke_hoach_goc {
+    int ma_cv PK, FK
+    date ngay_bat_dau_goc
+    date ngay_ket_thuc_goc
+    decimal gio_du_kien_goc
+    decimal chi_phi_ke_hoach_goc
+    datetime khoa_luc  "mở rộng"
+  }
+  nhat_ky_he_thong {
+    int ma_log PK
+    int ma_nguoi_thuc_hien FK
+    int ma_du_an FK
+    datetime thoi_diem
+    string loai_su_kien
+    string noi_dung
+    string doi_tuong  "mở rộng"
+    int ma_doi_tuong  "mở rộng"
+  }
+  chi_so_du_an {
+    int ma_cs PK "mở rộng"
+    int ma_du_an FK "mở rộng"
+    date ngay  "mở rộng"
+    decimal pv  "mở rộng"
+    decimal ev  "mở rộng"
+    decimal ac  "mở rộng"
+    decimal spi  "mở rộng"
+    decimal cpi  "mở rộng"
+    datetime created_at  "mở rộng"
+  }
+  thong_bao {
+    int ma_tb PK "mở rộng"
+    int ma_nd FK "mở rộng"
+    string loai  "mở rộng"
+    string tieu_de  "mở rộng"
+    string noi_dung  "mở rộng"
+    int ma_cv FK "mở rộng"
+    bool da_doc  "mở rộng"
+    string dedupe_key  "mở rộng"
+    datetime created_at  "mở rộng"
+  }
+  nguoi_dung |o--o{ du_an : ""
+  quan_ly ||--o{ du_an : "Quản lý"
+  du_an ||--o{ thanh_vien_du_an : "Có"
+  nguoi_dung ||--o{ thanh_vien_du_an : "Tham gia"
+  vai_tro ||--o{ thanh_vien_du_an : "Áp dụng"
+  du_an ||--o{ moc_du_an : "Có"
+  du_an ||--o{ epic : "Bao gồm"
+  task ||--|| ke_hoach_goc : "Có kế hoạch"
+  du_an |o--o{ nhat_ky_he_thong : "Phát sinh"
+  nguoi_dung |o--o{ nhat_ky_he_thong : "Thực hiện"
+  du_an ||--o{ chi_so_du_an : "Chụp chỉ số"
+  nguoi_dung ||--o{ thong_bao : "Nhận"
+  task |o--o{ thong_bao : "Về"
+</pre></div>
+
+<h3 id="d2-ho-so-cong-viec-va-d3-nhat-ky-gio-lam">D2 · Hồ sơ công việc và D3 · Nhật ký giờ làm</h3>
+<div class="diagram"><pre class="mermaid">erDiagram
+  task {
+    int ma_cv PK
+    int ma_du_an FK
+    int ma_moc FK
+    int ma_epic FK
+    string ten_cv
+    string mo_ta
+    string trang_thai
+    string uu_tien  "mở rộng"
+    int ty_le_hoan_thanh
+    date ngay_bat_dau_du_kien
+    date han_hoan_thanh
+    decimal gio_du_kien  "mở rộng"
+    int ma_nguoi_tao FK
+    datetime hoan_thanh_luc  "mở rộng"
+    datetime created_at  "mở rộng"
+    datetime updated_at  "mở rộng"
+    int version  "mở rộng"
+  }
+  sub_task {
+    int ma_subtask PK
+    int ma_cv FK
+    string ten_subtask
+    string mo_ta
+    string trang_thai
+  }
+  tep_dinh_kem {
+    int ma_tep PK
+    int ma_cv FK
+    string ten_tep
+    string duong_dan
+    int kich_thuoc  "mở rộng"
+    int ma_nguoi_tai FK
+    datetime thoi_diem_tai
+  }
+  phan_cong {
+    int ma_cv PK, FK
+    int ma_nd PK, FK
+    string trang_thai_phan_cong
+    date ngay_giao
+    decimal gio_du_kien
+    int ma_nguoi_giao FK
+  }
+  xet_duyet_cong_viec {
+    int ma_duyet PK
+    int ma_cv FK
+    int ma_nguoi_duyet FK
+    string ket_qua
+    string nhan_xet
+    datetime thoi_diem_duyet
+  }
+  nhat_ky_gio_lam {
+    int ma_nk PK
+    int ma_cv FK
+    int ma_nd FK
+    datetime bat_dau
+    datetime ket_thuc
+    decimal so_gio  "mở rộng"
+    string noi_dung
+    decimal chi_phi_thuc_te
+  }
+  nguoi_dung ||--o{ task : "Tạo"
+  moc_du_an |o--o{ task : "Gắn"
+  epic |o--o{ task : "Bao gồm"
+  du_an ||--o{ task : "Thuộc"
+  task ||--o{ sub_task : "Phân rã"
+  nguoi_dung ||--o{ tep_dinh_kem : "Tải lên"
+  task ||--o{ tep_dinh_kem : "Có tệp"
+  nguoi_dung ||--o{ phan_cong : "Giao"
+  nhan_vien ||--o{ phan_cong : "Nhận việc"
+  task ||--o{ phan_cong : "Được giao"
+  task ||--o{ xet_duyet_cong_viec : "Được duyệt"
+  nguoi_dung ||--o{ xet_duyet_cong_viec : "Duyệt"
+  nhan_vien ||--o{ nhat_ky_gio_lam : "Lập"
+  task ||--o{ nhat_ky_gio_lam : "Ghi giờ"
+</pre></div>
+
+<h3 id="d5-ho-so-vi-pham">D5 · Hồ sơ vi phạm</h3>
+<div class="diagram"><pre class="mermaid">erDiagram
+  quy_dinh_vi_pham {
+    int ma_qd PK
+    string ten_quy_dinh
+    decimal diem_tru
+    date tu_ngay
+    date den_ngay
+  }
+  vi_pham {
+    int ma_vp PK
+    int ma_cv FK
+    int ma_nd FK
+    int ma_nguoi_lap FK
+    int ma_qd FK
+    string noi_dung
+    string trang_thai
+    datetime thoi_diem
+    datetime han_giai_trinh  "mở rộng"
+    date ngay_xu_ly
+    string ket_luan
+    int ma_nguoi_xu_ly FK
+    int ma_ky_ap_dung FK
+  }
+  giai_trinh {
+    int ma_gt PK
+    int ma_vp FK
+    string noi_dung
+    datetime thoi_diem_gui
+    string duong_dan_bang_chung
+  }
+  quan_ly |o--o{ vi_pham : "Kết luận"
+  nguoi_dung ||--o{ vi_pham : "Lập"
+  task ||--o{ vi_pham : "Phát sinh"
+  nhan_vien ||--o{ vi_pham : "Bị ghi nhận"
+  quy_dinh_vi_pham ||--o{ vi_pham : "Áp dụng"
+  ky_kpi |o--o{ vi_pham : "Tính trừ"
+  vi_pham ||--o{ giai_trinh : "Có"
+</pre></div>
+
+<h3 id="d4-ho-so-kpi">D4 · Hồ sơ KPI</h3>
+<div class="diagram"><pre class="mermaid">erDiagram
+  tieu_chi_kpi {
+    int ma_tieu_chi PK
+    string ten_tieu_chi
+    string mo_ta_cach_tinh
+    string don_vi
+    string nguon_du_lieu  "mở rộng"
+  }
+  ky_kpi {
+    int ma_ky PK
+    int ma_du_an FK
+    string ten_ky
+    date tu_ngay
+    date den_ngay
+    string trang_thai
+  }
+  cau_hinh_kpi {
+    int ma_ky PK, FK
+    int ma_tieu_chi PK, FK
+    decimal trong_so
+    decimal chi_tieu
+  }
+  danh_gia_kpi {
+    int ma_ky PK, FK
+    int ma_nguoi_dung PK, FK
+    int ma_nguoi_duyet FK
+    string trang_thai
+    date ngay_xac_nhan
+    date ngay_duyet
+    decimal diem_goc  "mở rộng"
+    decimal diem_tru  "mở rộng"
+    decimal diem_tong  "mở rộng"
+    string nhan_xet  "mở rộng"
+  }
+  chi_tiet_kpi {
+    int ma_nguoi_dung PK, FK
+    int ma_ky PK, FK
+    int ma_tieu_chi PK, FK
+    decimal gia_tri_tu_dong  "mở rộng"
+    decimal gia_tri_thu_cong  "mở rộng"
+    decimal gia_tri_xac_nhan
+    string ghi_chu
+  }
+  du_an ||--o{ ky_kpi : "Có kỳ"
+  ky_kpi ||--o{ cau_hinh_kpi : "Cấu hình"
+  tieu_chi_kpi ||--o{ cau_hinh_kpi : "Được chọn"
+  ky_kpi ||--o{ danh_gia_kpi : "Có hồ sơ"
+  nguoi_dung ||--o{ danh_gia_kpi : "Được đánh giá"
+  quan_ly |o--o{ danh_gia_kpi : "Phê duyệt"
+  nguoi_dung ||--o{ chi_tiet_kpi : ""
+  danh_gia_kpi ||--o{ chi_tiet_kpi : "Gồm"
+  tieu_chi_kpi ||--o{ chi_tiet_kpi : ""
+  cau_hinh_kpi ||--o{ chi_tiet_kpi : "Áp dụng"
+  ky_kpi ||--o{ chi_tiet_kpi : ""
+</pre></div>
+
+<h2 id="4-vong-oi-nghiep-vu">4. Vòng đời nghiệp vụ</h2>
+<h3 id="du-an">Dự án</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+  [*] --> PLANNING: Ban giám đốc tạo
+  PLANNING --> ACTIVE
+  ACTIVE --> ON_HOLD
+  ON_HOLD --> ACTIVE
+  ACTIVE --> COMPLETED: hết việc mở
+  COMPLETED --> ACTIVE
+  ACTIVE --> CLOSED: Ban giám đốc đóng
+  COMPLETED --> CLOSED
+  CLOSED --> [*]
+</pre></div>
+
+<h3 id="cong-viec">Công việc</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+  [*] --> TODO
+  TODO --> IN_PROGRESS: cần có người được giao
+  IN_PROGRESS --> TODO
+  IN_PROGRESS --> IN_REVIEW: gửi duyệt
+  IN_REVIEW --> DONE: duyệt đạt
+  IN_REVIEW --> IN_PROGRESS: từ chối (bắt buộc nhận xét)
+  DONE --> IN_PROGRESS: mở lại (Trưởng nhóm/PM)
+  TODO --> CANCELLED
+  IN_PROGRESS --> CANCELLED
+  CANCELLED --> TODO: khôi phục
+</pre></div>
+
+<h3 id="vi-pham">Vi phạm</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+  [*] --> DRAFT: lập hồ sơ dự thảo
+  DRAFT --> PENDING_EXPLANATION: gửi yêu cầu giải trình (hạn 3 ngày)
+  PENDING_EXPLANATION --> EXPLAINED: thành viên nộp đơn
+  EXPLAINED --> EXPLAINED: nộp đơn bổ sung
+  EXPLAINED --> CONFIRMED: kết luận xử phạt
+  EXPLAINED --> DISMISSED: kết luận bác bỏ
+  PENDING_EXPLANATION --> CONFIRMED: quá hạn không giải trình
+  DRAFT --> DISMISSED: hủy dự thảo
+</pre></div>
+
+<h3 id="anh-gia-kpi-cua-mot-nguoi-trong-mot-ky">Đánh giá KPI của một người trong một kỳ</h3>
+<div class="diagram"><pre class="mermaid">stateDiagram-v2
+  [*] --> DRAFT: mở kỳ
+  DRAFT --> PROVISIONAL: tính tự động
+  PROVISIONAL --> MEMBER_CONFIRMED: thành viên xác nhận
+  MEMBER_CONFIRMED --> APPROVED: quản lý phê duyệt
+  MEMBER_CONFIRMED --> REJECTED: quản lý từ chối
+  REJECTED --> PROVISIONAL: tính lại
+  APPROVED --> [*]
+</pre></div>
+
+<p>Kỳ KPI chỉ đóng được khi mọi đánh giá đã <code>APPROVED</code>.</p>
+<h2 id="5-chuc-nang-theo-module">5. Chức năng theo module</h2>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Chức năng chính</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 Dự án</td>
+<td>Tạo dự án, cập nhật, thiết lập mục tiêu và thời gian, quản lý thành viên và vai trò, mốc, trạng thái, đóng dự án</td>
+</tr>
+<tr>
+<td>2 Công việc</td>
+<td>Tạo và sửa task, epic, subtask, phân công (cảnh báo vượt ngân sách giờ), ưu tiên và thời hạn, đổi trạng thái, đính kèm tệp, xét duyệt, ghi giờ</td>
+</tr>
+<tr>
+<td>3 Tiến độ</td>
+<td>Kế hoạch gốc, chỉ số EVM (PV, EV, AC, SPI, CPI, EAC), biểu đồ burn-down, nhắc deadline, cảnh báo trễ hạn, nhật ký truy vết</td>
+</tr>
+<tr>
+<td>4 KPI</td>
+<td>Tiêu chí, kỳ KPI, trọng số và chỉ tiêu, nhập hiệu suất thô, tính điểm tự động, xác nhận, phê duyệt, lịch sử</td>
+</tr>
+<tr>
+<td>5 Vi phạm</td>
+<td>Quy định xử phạt, lập vi phạm, yêu cầu giải trình, giải trình, kết luận, trừ điểm KPI</td>
+</tr>
+<tr>
+<td>6 Báo cáo</td>
+<td>Dashboard cá nhân, báo cáo portfolio cho Ban giám đốc, báo cáo dự án, xuất CSV/Excel cho PM</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="6-phan-quyen">6. Phân quyền</h2>
+<p>Quyền hiệu lực = quyền theo <strong>vai trò hệ thống</strong> ∪ quyền theo <strong>vai trò trong dự án</strong>. Người ngoài dự án nhận 404 để không lộ sự tồn tại. Không ai được tự duyệt KPI hay tự kết luận vi phạm của chính mình.</p>
+<div class="scroll"><table>
+<thead>
+<tr>
+<th>Quyền</th>
+<th>ADMIN</th>
+<th>DIRECTOR</th>
+<th>MANAGER</th>
+<th>EMPLOYEE</th>
+<th>PM</th>
+<th>TEAM_LEAD</th>
+<th>MEMBER</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user.manage</code> Quản lý người dùng</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>project.create</code> Khởi tạo dự án</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>project.read_all</code> Xem mọi dự án</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>project.close</code> Đóng dự án</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>report.portfolio</code> Báo cáo portfolio đa dự án</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>audit.read</code> Xem nhật ký hệ thống</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>alert.run</code> Chạy quét cảnh báo</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>kpi.criteria.manage</code> Quản lý tiêu chí KPI</td>
+<td>✔</td>
+<td></td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>violation.rule.manage</code> Quản lý quy định vi phạm</td>
+<td>✔</td>
+<td></td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>project.read</code> Xem dự án</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><code>project.update</code> Cập nhật dự án</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>member.manage</code> Quản lý thành viên</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>milestone.manage</code> Quản lý mốc</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>task.create</code> Tạo công việc</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+</tr>
+<tr>
+<td><code>task.update</code> Sửa công việc</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+</tr>
+<tr>
+<td><code>task.assign</code> Phân công</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+</tr>
+<tr>
+<td><code>task.review</code> Xét duyệt công việc</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+</tr>
+<tr>
+<td><code>task.transition</code> Cập nhật trạng thái công việc</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><code>timesheet.log</code> Ghi giờ làm</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><code>kpi.period.manage</code> Quản lý kỳ KPI</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>kpi.approve</code> Phê duyệt KPI</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>violation.create</code> Lập vi phạm</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+</tr>
+<tr>
+<td><code>violation.conclude</code> Kết luận vi phạm</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>report.project</code> Báo cáo dự án</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>progress.manage</code> Quản lý baseline/tiến độ</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><code>report.export</code> Xuất báo cáo (DFD 6.5: chỉ Quản lý dự án)</td>
+<td>✔</td>
+<td></td>
+<td></td>
+<td></td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="7-quy-tac-nghiep-vu-chinh">7. Quy tắc nghiệp vụ chính</h2>
+<ul>
+<li>Chỉ <strong>nhân viên</strong> mới nhận việc, ghi giờ và bị lập vi phạm; người thuộc loại <strong>quản lý</strong> (như PM) thì không.</li>
+<li>Task chỉ thành <code>DONE</code> qua bước xét duyệt; không tự duyệt nếu mình là người được giao duy nhất.</li>
+<li>Giờ làm: không trùng khoảng thời gian, không ở tương lai, tối đa 24 giờ mỗi bản ghi, sửa hoặc xóa trong 7 ngày.</li>
+<li>Điểm KPI = bình quân gia quyền của các tiêu chí đã có dữ liệu (mỗi tiêu chí tối đa 100%), trừ điểm vi phạm đã xử phạt, không thấp hơn 0.</li>
+<li>Dự án đã hoàn thành hoặc đóng chỉ đọc; riêng vi phạm và KPI vẫn xử lý được.</li>
+<li>Mọi thay đổi quan trọng đều ghi vào nhật ký hệ thống, gắn với dự án phát sinh.</li>
+</ul>
+<p>Các điểm thiết kế còn mâu thuẫn và các giả định cần nhóm duyệt nằm trong <code>docs/TRACEABILITY.md</code>.</p>
+<h2 id="8-van-hanh">8. Vận hành</h2>
+<ul>
+<li>Chạy thử: <code>docker compose up --build</code>, tài liệu API tại <code>/docs</code>.</li>
+<li>Job định kỳ: <code>python -m app.cli scan-alerts</code> và <code>snapshot-all</code>, chạy an toàn nhiều lần mỗi ngày.</li>
+<li>Cần bổ sung trước khi đưa vào sử dụng thật: HTTPS và giới hạn tần suất ở máy chủ web, sao lưu PostgreSQL hằng ngày, đưa <code>JWT_SECRET</code> vào nơi lưu bí mật, kiểm thử tải.</li>
+</ul></main></body></html>
