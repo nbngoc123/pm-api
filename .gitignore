@@ -96,3 +96,8 @@ desktop.ini
 uploads/
 tmp/
 temp/
+
+# Folder test (khong tracking, dung de scp)
+playground/
+test-deploy/
+test_lab/
