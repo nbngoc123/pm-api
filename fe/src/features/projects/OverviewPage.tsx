@@ -100,7 +100,7 @@ export function OverviewPage() {
                 <div className="flex flex-wrap gap-2">
                   {(Object.keys(MILESTONE_STATUS) as (keyof typeof MILESTONE_STATUS)[]).map((s) => (
                     <Badge key={s} tone={MILESTONE_STATUS[s].tone}>
-                      {MILESTONE_STATUS[s].text}: {o.moc_theo_trang_thai[s] ?? 0}
+                      {MILESTONE_STATUS[s].text}: {(o.moc_theo_trang_thai as Record<string, number>)[s] ?? 0}
                     </Badge>
                   ))}
                 </div>
